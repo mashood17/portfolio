@@ -1,0 +1,1 @@
+export const HERO_IMAGE_LAYOUT_ID = 'hero-portrait'
