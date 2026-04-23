@@ -2,24 +2,34 @@ import { motion } from 'framer-motion'
 
 const skillGroups = [
   {
-    icon: '⬡',
+    icon: '💻',
     title: 'Frontend',
-    skills: ['React', 'Next.js', 'Framer Motion', 'Tailwind CSS', 'TypeScript'],
+    skills: ['React.js', 'JavaScript ES6+', 'Framer Motion', 'Tailwind CSS', 'Tailwind CSS', 'HTML5', 'CSS3', 'Component Architecture',],
   },
   {
-    icon: '◈',
+    icon: '⚙️',
     title: 'Backend',
-    skills: ['Node.js', 'Express', 'REST APIs', 'JWT Auth', 'WebSockets'],
+    skills: ['Flask', 'Node.js', 'REST APIs', 'JWT Auth', 'WebSockets', 'Flask-SocketIO'],
   },
   {
-    icon: '▦',
+    icon: '🗄️',
     title: 'Database',
-    skills: ['PostgreSQL', 'MongoDB', 'Redis', 'Prisma', 'Supabase'],
+    skills: ['PostgreSQL', 'MongoDB', 'MySQL', 'Supabase'],
   },
   {
-    icon: '◎',
-    title: 'DevOps & Tools',
-    skills: ['Docker', 'Git', 'CI/CD', 'Linux', 'AWS S3'],
+    icon: '🔐',
+    title: 'Auth & Security',
+    skills: ['JWT Auth', 'Token Rotation', 'Axios Interceptors', 'Refresh Tokens'],
+  },
+  {
+    icon: '🧪',
+    title: 'Testiing',
+    skills: ['Pytest', 'Locust (Load Testing)'],
+  },
+  {
+    icon: '🛠️',
+    title: 'Tools & Deploy',
+    skills: ['Git, GitHub', 'Postman', 'Docker', 'Vercel', 'Render'],
   },
 ]
 
@@ -38,7 +48,7 @@ function SkillPill({ name, index }) {
       viewport={{ once: true }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.05 * index }}
       whileHover={{
-        color: '#B6FF3B',
+        color: 'var(--accent)',
         borderColor: 'rgba(182,255,59,0.35)',
         boxShadow: '0 0 16px rgba(182,255,59,0.12)',
         x: 4,
@@ -50,8 +60,8 @@ function SkillPill({ name, index }) {
         padding: '7px 14px',
         borderRadius: '8px',
         border: '1px solid rgba(255,255,255,0.07)',
-        background: 'rgba(255,255,255,0.025)',
-        color: 'rgba(255,255,255,0.55)',
+        background: 'rgba(115, 115, 115, 0.1)',
+        color: 'var(--text-primary)',
         fontSize: '12.5px',
         letterSpacing: '0.03em',
         fontWeight: 450,
@@ -95,7 +105,7 @@ function SkillGroup({ group, groupIndex }) {
         <span
           style={{
             fontSize: '15px',
-            color: '#B6FF3B',
+            color: 'var(--accent)',
             opacity: 0.8,
             lineHeight: 1,
             fontFamily: 'monospace',
@@ -108,7 +118,7 @@ function SkillGroup({ group, groupIndex }) {
             fontSize: '11px',
             textTransform: 'uppercase',
             letterSpacing: '0.16em',
-            color: 'rgba(255,255,255,0.4)',
+            color: 'var(--accent)',
             fontWeight: 600,
           }}
         >
@@ -129,7 +139,7 @@ function SkillGroup({ group, groupIndex }) {
       {/* Skill pills */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
         {group.skills.map((skill, i) => (
-          <SkillPill key={skill} name={skill} index={i} />
+         <SkillPill key={`${skill}-${i}`} name={skill} index={i} />
         ))}
       </div>
     </motion.div>
@@ -143,7 +153,8 @@ export default function Skills() {
       style={{
         minHeight: '100vh',
         width: '100%',
-        background: '#0e0e0e',
+        backgroundColor: 'var(--bg)',
+        transition: 'background-color 0.35s ease',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -208,20 +219,20 @@ export default function Skills() {
           {/* Code label */}
           <motion.div {...fadeUp(0)}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
               <span
                 style={{
                   fontSize: '11px',
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#B6FF3B',
+                  color: 'var(--accent)',
                   fontWeight: 600,
                   fontFamily: 'monospace',
                 }}
               >
                 SKILLS
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
+              <span style={{ color: 'var(--text-primary)rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
             </div>
           </motion.div>
 
@@ -231,7 +242,7 @@ export default function Skills() {
             style={{
               fontSize: 'clamp(42px, 5vw, 68px)',
               fontWeight: 900,
-              color: '#ffffff',
+              color: 'var(--fg)',
               letterSpacing: '-0.035em',
               lineHeight: 0.95,
               margin: 0,
@@ -240,7 +251,7 @@ export default function Skills() {
           >
             Tech
             <br />
-            <span style={{ color: '#B6FF3B' }}>Stack</span>
+            <span style={{ color: 'var(--accent)' }}>Stack</span>
           </motion.h2>
 
           {/* Accent line */}
@@ -249,7 +260,7 @@ export default function Skills() {
             style={{
               width: '48px',
               height: '2px',
-              background: 'linear-gradient(90deg, #B6FF3B, transparent)',
+              background: 'linear-gradient(90deg, var(--accent), transparent)',
               borderRadius: '2px',
             }}
           />
@@ -260,7 +271,7 @@ export default function Skills() {
             style={{
               fontSize: '13px',
               lineHeight: 1.8,
-              color: 'rgba(255,255,255,0.35)',
+              color: 'var(--text-primary)',
               maxWidth: '260px',
               margin: 0,
               fontWeight: 400,
@@ -284,7 +295,7 @@ export default function Skills() {
               style={{
                 fontSize: '36px',
                 fontWeight: 900,
-                color: '#ffffff',
+                color: 'var(--fg)',
                 letterSpacing: '-0.04em',
                 lineHeight: 1,
               }}
@@ -294,7 +305,7 @@ export default function Skills() {
             <span
               style={{
                 fontSize: '11px',
-                color: 'rgba(255,255,255,0.3)',
+                color: 'var(--text-primary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.12em',
               }}

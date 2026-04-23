@@ -1,356 +1,410 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useTheme } from '../hooks/useTheme'
+import campusImg from '../assets/campusloop.png'
+import gitImg from '../assets/gitinsight.png'
+import aiImg from '../assets/aihub.png'
+import raceImg from '../assets/racezone2.png'
 
 const projects = [
   {
     id: 1,
     category: 'Full Stack',
-    title: 'AuthFlow',
-    subtitle: 'Enterprise Auth System',
+    title: 'CampusLoop',
+    subtitle: 'Real-time Campus Communication',
     description:
-      'Production-grade authentication platform with JWT refresh tokens, OAuth2, role-based access control, and real-time session management across distributed services.',
-    tech: ['Node.js', 'React', 'PostgreSQL', 'Redis'],
-    accent: '#B6FF3B',
-    bg: 'linear-gradient(135deg, #0a1a00 0%, #0e0e0e 40%, #111800 100%)',
-    pattern: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B6FF3B' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    link: '#',
+      'Replaced fragmented WhatsApp-based communication with a structured real-time platform. Secured 20+ REST endpoints with JWT token rotation. Load tested at 50 concurrent users — 72ms avg response, 23+ RPS, 0% failure rate.',
+    tech: ['React', 'Flask', 'PostgreSQL', 'WebSockets', 'JWT'],
+    accent: 'var(--accent)',
+    darkBg: 'linear-gradient(135deg, #0a1a00 0%, #0e0e0e 40%, #111800 100%)',
+    lightBg: 'linear-gradient(135deg, #e8f5d0 0%, #f5f5f5 40%, #edf5d8 100%)',
+    pattern: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B6FF3B' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+    stats: ['72ms avg response', '23+ RPS', '0% failure'],
+    codeLink: 'https://github.com/mashood17/campus_loop',
+    liveLink: 'https://campus-loop-pi.vercel.app',
+    image: campusImg,
   },
   {
     id: 2,
-    category: 'Real-time',
-    title: 'PulseChat',
-    subtitle: 'Real-time Messaging',
+    category: 'Analytics',
+    title: 'GitInsight',
+    subtitle: 'GitHub Developer Analytics',
     description:
-      'Scalable WebSocket-powered messaging system with presence detection, message persistence, end-to-end typing indicators, and sub-100ms delivery latency.',
-    tech: ['WebSockets', 'Express', 'MongoDB', 'React'],
+      'Full-stack analytics platform with a custom developer scoring algorithm — classifies developers as Beginner, Intermediate, or Advanced based on weighted repos, stars, and followers. Validated by benchmarking against known profiles.',
+    tech: ['Python', 'Flask', 'JavaScript', 'Chart.js', 'GitHub API'],
     accent: '#3BF0FF',
-    bg: 'linear-gradient(135deg, #00101a 0%, #0e0e0e 40%, #001118 100%)',
-    pattern: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233BF0FF' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
-    link: '#',
+    darkBg: 'linear-gradient(135deg, #00101a 0%, #0e0e0e 40%, #001118 100%)',
+    lightBg: 'linear-gradient(135deg, #d0f0f5 0%, #f5f5f5 40%, #d8f0f5 100%)',
+    pattern: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233BF0FF' fill-opacity='0.06' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+    stats: ['Custom scoring algo', 'Beginner → Advanced', 'Profile benchmarking'],
+    codeLink: 'https://github.com/mashood17/gitinsight',
+    liveLink: 'https://gitinsight-lake.vercel.app',
+    image: gitImg,
   },
   {
     id: 3,
-    category: 'SaaS',
-    title: 'Taskflow',
-    subtitle: 'Project Management',
+    category: 'AI Platform',
+    title: 'Student AI Hub',
+    subtitle: 'AI Productivity Platform',
     description:
-      'Full-featured project management SaaS with Kanban boards, time tracking, team workspaces, Gantt views, and Slack-integrated notifications.',
-    tech: ['Next.js', 'Prisma', 'PostgreSQL', 'Tailwind'],
-    accent: '#FF6B3B',
-    bg: 'linear-gradient(135deg, #1a0800 0%, #0e0e0e 40%, #180800 100%)',
-    pattern: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B3B' fill-opacity='0.04'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    link: '#',
+      'Sole frontend developer on a team project. Built 7+ React modules: AI code generator, debugger, chatbot, doc summarizer, resume analyzer, roadmap generator, and task manager. Integrated 4 LLM providers with dynamic model switching.',
+    tech: ['React', 'Node.js', 'Express.js', 'PostgreSQL', 'LLaMA', 'Cerebras'],
+    accent: '#A855F7',
+    darkBg: 'linear-gradient(135deg, #0d0018 0%, #0e0e0e 40%, #100018 100%)',
+    lightBg: 'linear-gradient(135deg, #ede0f5 0%, #f5f5f5 40%, #f0e8f5 100%)',
+    pattern: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A855F7' fill-opacity='0.07'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+    stats: ['7+ React modules', '4 LLM providers', 'Dynamic model switching'],
+    codeLink: 'https://github.com/mashood17/student-ai-hub',
+    liveLink: 'https://frontend-k5qm.onrender.com',
+    image: aiImg,
   },
   {
     id: 4,
-    category: 'AI / ML',
-    title: 'Synapse',
-    subtitle: 'AI Document Intelligence',
+    category: 'Real-time',
+    title: 'RaceZone',
+    subtitle: 'RC Racing Display System',
     description:
-      'LLM-powered document analysis platform that extracts insights, generates summaries, and answers questions across multi-format enterprise knowledge bases.',
-    tech: ['Python', 'OpenAI', 'React', 'FastAPI'],
-    accent: '#A855F7',
-    bg: 'linear-gradient(135deg, #0d0018 0%, #0e0e0e 40%, #100018 100%)',
-    pattern: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A855F7' fill-opacity='0.04'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-    link: '#',
+      'Premium real-time RC racing platform with dual-screen architecture (TV display + admin panel). Instant leaderboard updates via WebSockets, JWT-secured APIs, and live race controls. F1-style UI with lap tracking and podium system.',
+    tech: ['React', 'Node.js', 'Express.js', 'PostgreSQL', 'Socket.io', 'JWT'],
+    accent: '#FF6B3B',
+    darkBg: 'linear-gradient(135deg, #1a0800 0%, #0e0e0e 40%, #180800 100%)',
+    lightBg: 'linear-gradient(135deg, #f5e0d8 0%, #f5f5f5 40%, #f5ddd0 100%)',
+    pattern: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B3B' fill-opacity='0.07'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+    stats: ['Dual-screen arch', 'Live leaderboard', 'F1-style UI'],
+    codeLink: 'https://github.com/mashood17/racezone',
+    liveLink: 'https://racezone.vercel.app/',
+    image: raceImg,
   },
 ]
 
-function ProjectCard({ project, index, total, scrollYProgress }) {
+function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
   const cardStart = index / total
   const cardEnd   = (index + 1) / total
 
-  const rawScale   = useTransform(scrollYProgress, [cardStart - 1/total, cardStart], [0.94, 1])
-  const rawOpacity = useTransform(scrollYProgress, [cardStart - 1/total, cardStart], [0, 1])
-  const rawY       = useTransform(scrollYProgress, [cardStart - 1/total, cardStart], ['6%', '0%'])
+  const rawScale = useTransform(scrollYProgress, [cardStart - 1 / total, cardStart], [0.94, 1])
+  const rawY     = useTransform(scrollYProgress, [cardStart - 1 / total, cardStart], ['6%', '0%'])
+  const exitScale = useTransform(scrollYProgress, [cardStart, cardEnd], [1, index < total - 1 ? 0.91 : 1])
+  const exitY     = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', index < total - 1 ? '-3%' : '0%'])
 
-  // push previous cards up + shrink as next card covers them
-  const scaleDown  = useTransform(scrollYProgress, [cardStart, cardEnd], [1, 0.92])
-  const pushY      = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', '-4%'])
+  const combinedScale = useTransform(scrollYProgress, (v) => {
+    if (index === 0) return exitScale.get()
+    return v < cardStart ? rawScale.get() : exitScale.get()
+  })
+  const combinedY = useTransform(scrollYProgress, (v) => {
+    if (index === 0) return exitY.get()
+    return v < cardStart ? rawY.get() : exitY.get()
+  })
 
-  const scale   = index === 0
-    ? useSpring(scaleDown,  { stiffness: 80, damping: 22 })
-    : useSpring(
-        useTransform(scrollYProgress,
-          [cardStart - 1/total, cardStart, cardEnd],
-          [0.94, 1, index < total - 1 ? 0.92 : 1]
-        ),
-        { stiffness: 80, damping: 22 }
-      )
+  const scale = useSpring(combinedScale, { stiffness: 72, damping: 22 })
+  const y     = useSpring(combinedY,     { stiffness: 72, damping: 22 })
 
-  const opacity = useSpring(
-    index === 0 ? scaleDown.get() && rawOpacity : rawOpacity,
-    { stiffness: 100, damping: 28 }
-  )
+  const brightness = useTransform(scrollYProgress, [cardStart, cardEnd], [1, index < total - 1 ? 0.7 : 1])
+  const contentY   = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', '-6%'])
 
-  const y = useSpring(
-    index === 0 ? pushY : rawY,
-    { stiffness: 80, damping: 22 }
-  )
-
-  // Parallax for inner content
-  const contentY = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', '-8%'])
+  // ── Theme-derived values ──
+  const cardBg      = isDark ? project.darkBg      : project.lightBg
+  const overlayBg = isDark ? 'rgba(0,0,0,0.32)' : 'rgba(255,255,255,0.45)'
+  const indexColor  = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)'
+  const btnBorder   = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'
+  const btnBg       = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'
+  const btnColor    = 'var(--accent)'
+  const liveBg      = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'
+  const liveColor   = 'var(--accent)'
+  const subtitleColor = 'var(--text-primary)'
+  const titleColor = 'var(--accent)'
+  const descColor   = 'var(--text-primary)'
+  const techColor   = 'var(--accent)'
+  const dotColor    = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'
+  const statColor   = 'var(--text-primary)'
+  const statBg      = 'var(--tech-bg)'
+  const statBorder  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'
 
   return (
     <div
       style={{
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        position: 'sticky', top: 0, height: '100vh', width: '100%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
         zIndex: index + 1,
       }}
     >
       <motion.div
         style={{
-          width: '100%',
-          height: '100%',
-          scale,
-          y,
+          width: '100%', height: '100%',
+          scale, y,
+          filter: useTransform(brightness, v => `brightness(${v})`),
           transformOrigin: 'top center',
-          willChange: 'transform',
+          willChange: 'transform, filter',
+          transition: 'filter 0.3s ease',
         }}
       >
-        {/* ── Card shell ── */}
+        {/* Card shell */}
         <div
           style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            background: project.bg,
-            overflow: 'hidden',
+            position: 'relative', width: '100%', height: '100%',
+            background: cardBg, overflow: 'hidden',
+            transition: 'background 0.35s ease',
           }}
         >
-          {/* Pattern texture */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: project.pattern,
-              zIndex: 0,
-            }}
-          />
+          {/* Pattern */}
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: project.pattern, zIndex: 0 }} />
 
-          {/* 50% dark overlay */}
+          {/* Overlay — dark dims, light brightens */}
           <div
             style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(0,0,0,0.52)',
-              zIndex: 1,
+              position: 'absolute', inset: 0, background: overlayBg, zIndex: 1,
+              transition: 'background 0.35s ease',
             }}
           />
 
           {/* Grain */}
           <div
             style={{
-              position: 'absolute',
-              inset: 0,
+              position: 'absolute', inset: 0,
               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              backgroundSize: '128px',
-              opacity: 0.04,
-              zIndex: 2,
-              pointerEvents: 'none',
+              backgroundSize: '128px', opacity: 0.04, zIndex: 2, pointerEvents: 'none',
             }}
           />
 
-          {/* Accent corner glow */}
+          {/* Accent glows */}
           <div
             style={{
-              position: 'absolute',
-              bottom: '-80px',
-              left: '-80px',
-              width: '400px',
-              height: '400px',
-              borderRadius: '50%',
-              background: `radial-gradient(circle, ${project.accent}18 0%, transparent 65%)`,
-              zIndex: 2,
-              pointerEvents: 'none',
+              position: 'absolute', bottom: '-80px', left: '-80px',
+              width: '500px', height: '500px', borderRadius: '50%',
+              background: `radial-gradient(circle, ${project.accent}14 0%, transparent 65%)`,
+              zIndex: 2, pointerEvents: 'none',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute', top: '-100px', right: '-100px',
+              width: '400px', height: '400px', borderRadius: '50%',
+              background: `radial-gradient(circle, ${project.accent}08 0%, transparent 65%)`,
+              zIndex: 2, pointerEvents: 'none',
             }}
           />
 
-          {/* ── Content ── */}
+          {/* Main content */}
           <motion.div
             style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 10,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              padding: '60px 72px',
-              y: contentY,
-              willChange: 'transform',
+              position: 'absolute', inset: 0, zIndex: 10,
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              padding: '52px 72px 56px',
+              y: contentY, willChange: 'transform',
             }}
           >
-            {/* Index number — top left */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '52px',
-                left: '72px',
-                fontSize: '11px',
-                color: 'rgba(255,255,255,0.2)',
-                letterSpacing: '0.2em',
-                fontFamily: 'monospace',
-              }}
-            >
-              {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-            </div>
+            {/* TOP ROW */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '11px', color: indexColor, letterSpacing: '0.2em', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>
+                {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+              </span>
 
-            {/* Arrow button — top right */}
-            <motion.a
-              href={project.link}
-              whileHover={{ scale: 1.08, backgroundColor: project.accent }}
-              whileTap={{ scale: 0.96 }}
-              transition={{ duration: 0.18 }}
-              style={{
-                position: 'absolute',
-                top: '44px',
-                right: '72px',
-                width: '52px',
-                height: '52px',
-                borderRadius: '50%',
-                border: `1px solid rgba(255,255,255,0.15)`,
-                background: 'rgba(255,255,255,0.06)',
-                backdropFilter: 'blur(8px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                fontSize: '18px',
-                textDecoration: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              ↗
-            </motion.a>
-
-            {/* Bottom content */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-
-              {/* Category pill */}
-              <motion.div
-                initial={{ opacity: 0, x: -12 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: [0.22,1,0.36,1] }}
-              >
-                <span
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <motion.a
+                  className="premium-hover"
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '5px 12px',
-                    borderRadius: '999px',
-                    background: `${project.accent}22`,
-                    border: `1px solid ${project.accent}44`,
-                    color: project.accent,
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
+                    '--hover-accent': project.accent,
+                  }}
+                  href={project.codeLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05, borderColor: project.accent, color: project.accent }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 16px', borderRadius: '999px',
+                    border: `1px solid ${btnBorder}`,
+                    background: btnBg, backdropFilter: 'blur(8px)',
+                    color: btnColor, fontSize: '12px', fontWeight: 600,
+                    textDecoration: 'none', letterSpacing: '0.04em',
+                    transition: 'color 0.2s, border-color 0.2s, background 0.35s ease',
+                    cursor: 'pointer',
                   }}
                 >
-                  <span
-                    style={{
-                      width: '5px',
-                      height: '5px',
-                      borderRadius: '50%',
-                      background: project.accent,
-                    }}
-                  />
-                  {project.category}
-                </span>
-              </motion.div>
+                  ⌘ Code
+                </motion.a>
 
-              {/* Subtitle */}
-              <div
-                style={{
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.35)',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {project.subtitle}
+                <motion.a
+                  className="premium-hover"
+                  style={{
+                    '--hover-accent': project.accent,
+                  }}
+                  href={project.liveLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05, background: project.accent, color: '#0e0e0e' }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 16px', borderRadius: '999px',
+                    background: liveBg,
+                    border: `1px solid ${btnBorder}`,
+                    backdropFilter: 'blur(8px)',
+                    color: liveColor, fontSize: '12px', fontWeight: 600,
+                    textDecoration: 'none', letterSpacing: '0.04em',
+                    transition: 'background 0.2s, color 0.2s, border-color 0.35s ease',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ↗ Live Demo
+                </motion.a>
               </div>
+            </div>
 
-              {/* HUGE title */}
-              <h2
-                style={{
-                  fontSize: 'clamp(52px, 8vw, 110px)',
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  letterSpacing: '-0.04em',
-                  lineHeight: 0.9,
-                  margin: 0,
-                  fontFamily: "'Inter', sans-serif",
-                  textShadow: '0 4px 40px rgba(0,0,0,0.5)',
-                }}
-              >
-                {project.title}
-              </h2>
+            {/* BOTTOM BLOCK */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '60px', alignItems: 'end' }}>
+              
+              {/* LEFT: TEXT (unchanged) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', maxWidth: '620px' }}>
 
-              {/* Divider */}
-              <div
-                style={{
-                  width: '48px',
-                  height: '1px',
-                  background: project.accent,
-                  opacity: 0.6,
-                }}
-              />
+                <motion.span
+                  initial={{ opacity: 0, x: -12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '5px 12px', borderRadius: '999px', width: 'fit-content',
+                    background: `${project.accent}1a`,
+                    border: `1px solid ${project.accent}40`,
+                    color: project.accent,
+                    fontSize: '10.5px', fontWeight: 700,
+                    letterSpacing: '0.14em', textTransform: 'uppercase',
+                  }}
+                >
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: project.accent }} />
+                  {project.category}
+                </motion.span>
 
-              {/* Bottom row: description + tech */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'space-between',
-                  gap: '40px',
-                  flexWrap: 'wrap',
-                }}
-              >
-                {/* Description */}
+                <div style={{ fontSize: '12px', color: subtitleColor, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                  {project.subtitle}
+                </div>
+
+                <h2
+                  style={{
+                    fontSize: 'clamp(48px, 7vw, 96px)', fontWeight: 900,
+                    color: titleColor, letterSpacing: '-0.04em', lineHeight: 0.88,
+                    margin: 0,
+                  }}
+                >
+                  {project.title}
+                </h2>
+
+                <div style={{ width: '40px', height: '1px', background: project.accent, opacity: 0.7 }} />
+
                 <p
                   style={{
-                    fontSize: '14px',
-                    lineHeight: 1.75,
-                    color: 'rgba(255,255,255,0.45)',
-                    maxWidth: '480px',
+                    fontSize: '13.5px', lineHeight: 1.75, color: descColor,
                     margin: 0,
-                    fontWeight: 400,
                   }}
                 >
                   {project.description}
                 </p>
 
-                {/* Tech stack */}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      style={{
-                        fontSize: '10.5px',
-                        color: 'rgba(255,255,255,0.35)',
-                        padding: '4px 10px',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        background: 'rgba(255,255,255,0.03)',
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {project.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="premium-hover"
+                    style={{
+                      '--hover-accent': project.accent,
+
+                      padding: '6px 12px',
+                      borderRadius: '999px',
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      letterSpacing: '0.05em',
+
+                      color: 'var(--accent)',
+                      background: 'var(--tech-bg)',
+                      border: '1px solid var(--tech-border)',
+                      backdropFilter: 'blur(6px)',
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
+              {/* RIGHT: STATS (same as before) */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',   // 🔥 KEY LINE
+                  gap: '8px',
+                  marginTop: '12px',
+                  alignItems: 'flex-start',  // keep left aligned
+                  borderLeft: `2px solid ${project.accent}`,
+                  paddingLeft: '10px',    
+                }}
+              >
+                {project.stats.map((stat) => (
+                  <span
+                    key={stat}
+                    className="premium-hover"
+                    style={{
+                      '--hover-accent': project.accent,
+
+                      padding: '6px 14px',
+                      borderRadius: '8px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+
+                      color: 'var(--text-primary)',
+                      background: 'var(--tech-bg)',
+                      border: '1px solid var(--tech-border)',
+                    }}
+                  >
+                    {stat}
+                  </span>
+                ))}
+              </div>
+
+              </div>
+
+              {/* 🟢 MIDDLE: SCREENSHOT (THIS IS WHAT YOU WANTED) */}
+             <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <motion.img
+                src={project.image}
+                alt={project.title}
+                
+
+                initial={{ opacity: 0, scale: 0.92 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+
+                whileHover={{
+                  scale: 1.12,
+                  y: -8,
+                  boxShadow: `0 40px 100px rgba(0,0,0,0.5), 0 0 50px ${project.accent}`,
+                  filter: 'brightness(1.1)',
+                  rotate: 0.8,
+                }}
+
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+
+                style={{
+                  width: '100%',     
+                  alignItems: 'center',
+                  overflow: 'visible',         // ✅ FIX
+                  maxWidth: '360px',          // control size
+                  height: '240px',
+
+                  borderRadius: '14px',
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
+                  backdropFilter: 'blur(6px)',
+
+                  objectFit: 'cover',         // keeps it nicely cropped
+
+                  boxShadow: isDark
+                    ? '0 30px 80px rgba(0,0,0,0.8)'
+                    : '0 20px 60px rgba(0,0,0,0.2)',
+                }}
+              />
+            </div>
             </div>
           </motion.div>
         </div>
@@ -360,6 +414,7 @@ function ProjectCard({ project, index, total, scrollYProgress }) {
 }
 
 export default function Projects() {
+  const { isDark } = useTheme()
   const containerRef = useRef(null)
   const total = projects.length
 
@@ -369,56 +424,63 @@ export default function Projects() {
   })
 
   return (
-    <section id="projects" ref={containerRef} style={{ position: 'relative' }}>
-
-      {/* ── Section label — fixed during scroll ── */}
+    <section
+      id="projects"
+      ref={containerRef}
+      style={{ position: 'relative', transition: 'background 0.35s ease' }}
+    >
+      {/* Section header */}
       <div
         style={{
-          position: 'sticky',
-          top: '50%',
-          zIndex: 100,
-          pointerEvents: 'none',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          paddingRight: '36px',
-          marginTop: '-20px',
+          position: 'relative', zIndex: 0,
+          padding: '100px 72px 60px',
+          backgroundColor: 'var(--bg)',
+          display: 'flex', flexDirection: 'column', gap: '16px',
+          transition: 'background-color 0.35s ease',
         }}
       >
-        <div
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ color: 'var(--fg-muted)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
+          <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
+            PROJECTS
+          </span>
+          <span style={{ color: 'var(--fg-muted)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
+        </div>
+
+        <h2
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: '6px',
+            fontSize: 'clamp(40px, 5.5vw, 72px)', fontWeight: 900,
+            color: 'var(--fg)', letterSpacing: '-0.035em', lineHeight: 0.92,
+            margin: 0, fontFamily: "'Inter', sans-serif",
+            transition: 'color 0.35s ease',
           }}
         >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '11px', fontFamily: 'monospace' }}>&lt;</span>
-            <span
-              style={{
-                fontSize: '9px',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: 'rgba(182,255,59,0.5)',
-                fontWeight: 600,
-                fontFamily: 'monospace',
-              }}
-            >
-              PROJECTS
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '11px', fontFamily: 'monospace' }}>/&gt;</span>
-          </div>
+          Featured <span style={{ color: 'var(--accent)' }}>Projects</span>
+        </h2>
 
-          {/* Progress dots */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
-            {projects.map((_, i) => (
-              <ScrollDot key={i} index={i} total={total} scrollYProgress={scrollYProgress} />
-            ))}
-          </div>
+        <div style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, var(--accent), transparent)', borderRadius: '2px' }} />
+
+        <p style={{ fontSize: '13.5px', lineHeight: 1.75, color: 'var(--fg-muted)', maxWidth: '460px', margin: 0, transition: 'color 0.35s ease' }}>
+          These selected projects reflect my ability to design and build real-world, scalable systems.
+        </p>
+      </div>
+
+      {/* Progress dots */}
+      <div
+        style={{
+          position: 'sticky', top: '50%', zIndex: 100, pointerEvents: 'none',
+          display: 'flex', justifyContent: 'flex-end',
+          paddingRight: '32px', marginTop: '-12px',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
+          {projects.map((_, i) => (
+            <ScrollDot key={i} index={i} total={total} scrollYProgress={scrollYProgress} />
+          ))}
         </div>
       </div>
 
-      {/* ── Stacked cards — each 100vh, all sticky ── */}
+      {/* Stacked cards */}
       <div style={{ height: `${total * 100}vh` }}>
         {projects.map((project, i) => (
           <ProjectCard
@@ -427,6 +489,7 @@ export default function Projects() {
             index={i}
             total={total}
             scrollYProgress={scrollYProgress}
+            isDark={isDark}
           />
         ))}
       </div>
@@ -437,17 +500,11 @@ export default function Projects() {
 function ScrollDot({ index, total, scrollYProgress }) {
   const start  = index / total
   const end    = (index + 1) / total
-  const active = useTransform(scrollYProgress, [start, end], [1, 0])
+  const active = useTransform(scrollYProgress, [start, Math.min(start + 0.05, end)], [0.25, 1])
 
   return (
     <motion.div
-      style={{
-        width: '4px',
-        height: '4px',
-        borderRadius: '50%',
-        background: '#B6FF3B',
-        opacity: active,
-      }}
+      style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent)', opacity: active }}
     />
   )
 }

@@ -50,7 +50,8 @@ export default function Education() {
       id="education"
       style={{
         width: '100%',
-        background: '#0e0e0e',
+        backgroundColor: 'var(--bg)',
+        transition: 'background-color 0.35s ease',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -107,27 +108,27 @@ export default function Education() {
           style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
         >
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
+            <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
             <span
               style={{
                 fontSize: '11px',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#B6FF3B',
+                color: 'var(--accent)',
                 fontWeight: 600,
                 fontFamily: 'monospace',
               }}
             >
               EDUCATION
             </span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
+            <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
           </div>
 
           <h2
             style={{
               fontSize: 'clamp(36px, 5vw, 58px)',
               fontWeight: 900,
-              color: '#ffffff',
+              color: 'var(--fg)',
               letterSpacing: '-0.035em',
               lineHeight: 0.95,
               margin: 0,
@@ -135,14 +136,14 @@ export default function Education() {
             }}
           >
             Education &{' '}
-            <span style={{ color: '#B6FF3B' }}>Academics</span>
+            <span style={{ color: 'var(--accent)' }}>Academics</span>
           </h2>
 
           <div
             style={{
               width: '48px',
               height: '2px',
-              background: 'linear-gradient(90deg, #B6FF3B, transparent)',
+              background: 'linear-gradient(90deg, var(--accent), transparent)',
               borderRadius: '2px',
             }}
           />
@@ -177,8 +178,8 @@ function EducationCard({ item, index }) {
       // ── 2. Hover: lift + neon glow ──
       whileHover={{
         y: -5,
-        boxShadow: '0 0 0 1px rgba(182,255,59,0.16), 0 12px 40px rgba(0,0,0,0.35), 0 0 28px rgba(182,255,59,0.06)',
-        borderColor: 'rgba(182,255,59,0.16)',
+        boxShadow: '0 0 0 1px rgba(182,255,59,0.15), 0 8px 24px rgba(0,0,0,0.3)',
+        borderColor: 'var(--accent)',
         backgroundColor: 'rgba(255,255,255,0.035)',
       }}
 
@@ -197,8 +198,9 @@ function EducationCard({ item, index }) {
       }}
 
       style={{
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
+        boxShadow: 'var(--card-shadow)',
         borderRadius: '16px',
         padding: '32px 36px',
         display: 'flex',
@@ -225,8 +227,8 @@ function EducationCard({ item, index }) {
               width: '40px',
               height: '40px',
               borderRadius: '10px',
-              background: 'rgba(182,255,59,0.06)',
-              border: '1px solid rgba(182,255,59,0.1)',
+              background: 'var(--card-bg)',
+              border: '1px solid var(--accent)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -244,7 +246,7 @@ function EducationCard({ item, index }) {
               style={{
                 fontSize: '15.5px',
                 fontWeight: 700,
-                color: '#ffffff',
+                color: 'var(--fg)',
                 margin: 0,
                 letterSpacing: '-0.02em',
                 lineHeight: 1.25,
@@ -255,7 +257,7 @@ function EducationCard({ item, index }) {
             <span
               style={{
                 fontSize: '12.5px',
-                color: 'rgba(255,255,255,0.38)',
+                color: 'var(--text-primary)',
                 letterSpacing: '0.01em',
               }}
             >
@@ -268,9 +270,9 @@ function EducationCard({ item, index }) {
         <span
           style={{
             fontSize: '11px',
-            color: 'rgba(255,255,255,0.3)',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.07)',
+            color: 'var(--text-primary)',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--card-border)',
             padding: '4px 12px',
             borderRadius: '999px',
             letterSpacing: '0.06em',
@@ -288,7 +290,7 @@ function EducationCard({ item, index }) {
         style={{
           height: '1px',
           background:
-            'linear-gradient(90deg, rgba(182,255,59,0.1), rgba(255,255,255,0.04) 50%, transparent)',
+            'linear-gradient(90deg, var(--card-border), var(--card-border) 50%, transparent)',
         }}
       />
 
@@ -320,7 +322,7 @@ function EducationCard({ item, index }) {
               gap: '10px',
               fontSize: '13px',
               lineHeight: 1.7,
-              color: 'rgba(255,255,255,0.42)',
+              color: 'var(--text-primary)',
             }}
           >
             <span
@@ -330,7 +332,7 @@ function EducationCard({ item, index }) {
                 width: '3px',
                 height: '3px',
                 borderRadius: '50%',
-                background: '#B6FF3B',
+                background: 'var(--card-bg)',
                 opacity: 0.6,
               }}
             />

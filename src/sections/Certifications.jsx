@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTheme } from '../hooks/useTheme'
 
 const certifications = [
   {
@@ -63,12 +64,14 @@ const cardVariants = {
 }
 
 export default function Certifications() {
+  const { isDark } = useTheme()
   return (
     <section
       id="certifications"
       style={{
         width: '100%',
-        background: '#0e0e0e',
+        backgroundColor: 'var(--bg)',
+        transition: 'background-color 0.35s ease',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -130,7 +133,7 @@ export default function Certifications() {
           {/* Code label */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             <span
-              style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}
+              style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}
             >
               &lt;
             </span>
@@ -139,7 +142,7 @@ export default function Certifications() {
                 fontSize: '11px',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#B6FF3B',
+                color: 'var(--accent)',
                 fontWeight: 600,
                 fontFamily: 'monospace',
               }}
@@ -147,7 +150,7 @@ export default function Certifications() {
               CERTIFICATIONS
             </span>
             <span
-              style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}
+              style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}
             >
               /&gt;
             </span>
@@ -157,7 +160,7 @@ export default function Certifications() {
             style={{
               fontSize: 'clamp(34px, 4.5vw, 56px)',
               fontWeight: 900,
-              color: '#ffffff',
+              color: 'var(--fg)',
               letterSpacing: '-0.035em',
               lineHeight: 0.95,
               margin: 0,
@@ -165,14 +168,14 @@ export default function Certifications() {
             }}
           >
             Certifications &{' '}
-            <span style={{ color: '#B6FF3B' }}>Professional Development</span>
+            <span style={{ color: 'var(--accent)' }}>Professional Development</span>
           </h2>
 
           <div
             style={{
               width: '48px',
               height: '2px',
-              background: 'linear-gradient(90deg, #B6FF3B, transparent)',
+              background: 'linear-gradient(90deg, var(--accent), transparent)',
               borderRadius: '2px',
             }}
           />
@@ -183,7 +186,7 @@ export default function Certifications() {
               style={{
                 fontSize: '32px',
                 fontWeight: 900,
-                color: '#ffffff',
+                color: 'var(--fg)',
                 letterSpacing: '-0.04em',
                 lineHeight: 1,
               }}
@@ -193,7 +196,7 @@ export default function Certifications() {
             <span
               style={{
                 fontSize: '11px',
-                color: 'rgba(255,255,255,0.3)',
+                color: 'var(--text-primary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.12em',
               }}
@@ -227,6 +230,7 @@ export default function Certifications() {
 }
 
 function CertCard({ cert }) {
+  const { isDark } = useTheme()
   return (
     <motion.div
       variants={cardVariants}
@@ -235,13 +239,12 @@ function CertCard({ cert }) {
       whileHover={{
         scale: 1.02,
         y: -4,
-        boxShadow:
-          '0 0 0 1px rgba(182,255,59,0.14), 0 16px 40px rgba(0,0,0,0.4), 0 0 24px rgba(182,255,59,0.05)',
-        borderColor: 'rgba(182,255,59,0.15)',
-        backgroundColor: 'rgba(255,255,255,0.035)',
+        boxShadow: '0 0 0 1px rgba(182,255,59,0.15), 0 8px 24px rgba(0,0,0,0.3)',
+        borderColor: 'var(--accent)',
+        backgroundColor: 'var(--bg-primary)',
       }}
       transition={{
-        // Hover responds quickly, separate from scroll-in
+        // Hover responds quickly, separate from scroll-  in
         scale:           { type: 'spring', stiffness: 260, damping: 26 },
         y:               { type: 'spring', stiffness: 260, damping: 26 },
         boxShadow:       { duration: 0.24, ease: EASE },
@@ -249,8 +252,9 @@ function CertCard({ cert }) {
         backgroundColor: { duration: 0.24, ease: EASE },
       }}
       style={{
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
+        boxShadow: 'var(--card-shadow)',
         borderRadius: '14px',
         padding: '28px',
         display: 'flex',
@@ -268,8 +272,13 @@ function CertCard({ cert }) {
             width: '38px',
             height: '38px',
             borderRadius: '10px',
-            background: 'rgba(182,255,59,0.06)',
-            border: '1px solid rgba(182,255,59,0.1)',
+            background: isDark 
+              ? 'rgba(182,255,59,0.06)' 
+              : 'rgba(182,255,59,0.12)',
+
+            border: isDark
+              ? '1px solid rgba(182,255,59,0.1)'
+              : '1px solid rgba(182,255,59,0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -284,7 +293,7 @@ function CertCard({ cert }) {
           style={{
             fontSize: '14px',
             fontWeight: 700,
-            color: '#ffffff',
+            color: 'var(--fg)',
             margin: 0,
             letterSpacing: '-0.015em',
             lineHeight: 1.35,
@@ -309,7 +318,7 @@ function CertCard({ cert }) {
         <span
           style={{
             fontSize: '12px',
-            color: 'rgba(255,255,255,0.4)',
+            color: 'var(--text-primary)',
             letterSpacing: '0.01em',
           }}
         >
@@ -323,7 +332,7 @@ function CertCard({ cert }) {
               width: '4px',
               height: '4px',
               borderRadius: '50%',
-              background: '#B6FF3B',
+              background: 'var(--accent)',
               opacity: 0.5,
               flexShrink: 0,
             }}
@@ -331,7 +340,7 @@ function CertCard({ cert }) {
           <span
             style={{
               fontSize: '11px',
-              color: 'rgba(255,255,255,0.25)',
+              color: 'var(--text-primary)',
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
             }}

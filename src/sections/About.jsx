@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
 import { HERO_IMAGE_LAYOUT_ID } from '../data/sharedKeys'
 import photo from '../assets/mashood.jpeg';
+import { useScroll, useTransform, motion } from 'framer-motion'
+import { useRef } from 'react'
 
 
 const fadeUp = (delay = 0) => ({
@@ -11,13 +12,24 @@ const fadeUp = (delay = 0) => ({
 })
 
 export default function About() {
+    const ref = useRef(null)
+
+    const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start']
+    })
+
+    const y = useTransform(scrollYProgress, [0.5, 1], [1, 0])
+    const opacity = useTransform(scrollYProgress, [0.5, 1], [1, 0])
+    const scale = useTransform(scrollYProgress, [0.5, 1], [1, 0])
   return (
     <section
       id="about"
       style={{
         minHeight: '100vh',
         width: '100%',
-        background: '#0e0e0e',
+        backgroundColor: 'var(--bg)',
+        transition: 'background-color 0.35s ease',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -82,27 +94,27 @@ export default function About() {
                 marginBottom: '16px',
               }}
             >
-              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
               <span
                 style={{
                   fontSize: '11px',
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#B6FF3B',
+                  color: 'var(--accent)',
                   fontWeight: 600,
                   fontFamily: 'monospace',
                 }}
               >
                 ABOUT ME
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
             </div>
 
             <h2
               style={{
                 fontSize: 'clamp(40px, 5vw, 64px)',
                 fontWeight: 900,
-                color: '#ffffff',
+                color: 'var(--fg)',
                 letterSpacing: '-0.03em',
                 lineHeight: 1,
                 margin: 0,
@@ -128,11 +140,10 @@ export default function About() {
             <span
               style={{
                 display: 'inline-block',
-                fontSize: '11px',
+                fontSize: '18px', color: 'var(--text-primary)',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.3)',
-                background: 'rgba(255,255,255,0.04)',
+                background: 'rgba(115, 115, 115, 0.1)',
                 border: '1px solid rgba(255,255,255,0.07)',
                 padding: '5px 12px',
                 borderRadius: '999px',
@@ -145,21 +156,36 @@ export default function About() {
           {/* Bio paragraph */}
           <motion.p
             {...fadeUp(0.2)}
+            onViewportEnter={(e) => {
+                e.target.classList.add('motion-visible')
+            }}
             style={{
               fontSize: '15px',
               lineHeight: 1.85,
-              color: 'rgba(255,255,255,0.55)',
+              color: 'var(--text-primary)',
               maxWidth: '460px',
               margin: 0,
               fontWeight: 400,
+              textAlign: 'justify',
             }}
           >
-            I'm a{' '}
-            <span style={{ color: '#ffffff', fontWeight: 600 }}>full-stack developer</span>{' '}
-            specializing in building scalable, real-world applications with strong{' '}
-            <span style={{ color: '#B6FF3B', fontWeight: 500 }}>backend architecture</span> and
-            refined{' '}
-            <span style={{ color: '#B6FF3B', fontWeight: 500 }}>frontend experiences</span>.
+           I'm a{' '}
+          <span className="fixed-highlight">full-stack developer</span>{' '}
+          specializing in React and Flask, with a track record of independently building and shipping real-time web applications from scratch.
+
+          <br /><br />
+
+          I'm comfortable owning the full stack — JWT-secured APIs, WebSockets, PostgreSQL, and UI systems down to the component level.
+
+          <br /><br />
+
+          Built and deployed 3 production projects, published a research paper, and consistently ship ideas to production.
+            <br /><br />
+
+            <span style={{ opacity: 0.7 }}>
+            Based in Mangaluru, Karnataka.
+            </span>
+
           </motion.p>
 
           {/* Location pill */}
@@ -171,7 +197,7 @@ export default function About() {
             <span
               style={{
                 fontSize: '13px',
-                color: 'rgba(255,255,255,0.4)',
+                color: 'var(--text-primary)',
                 letterSpacing: '0.04em',
               }}
             >
@@ -182,11 +208,11 @@ export default function About() {
           {/* Stat chips */}
           <motion.div
             {...fadeUp(0.3)}
-            style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '8px' }}
+            style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '8px', color:"var(--fg-muted", }}
           >
             {[
-              { value: '2+', label: 'Years Building' },
-              { value: '15+', label: 'Projects Shipped' },
+              { value: '1+', label: 'Years Building' },
+              { value: '3+', label: 'Projects Deployed' },
               { value: 'Full', label: 'Stack Dev' },
             ].map(({ value, label }) => (
               <div
@@ -194,8 +220,9 @@ export default function About() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
+                  color: 'var(--text-primary)',
                   padding: '14px 20px',
-                  background: 'rgba(255,255,255,0.03)',
+                  background: 'rgba(115, 115, 115, 0.1)',
                   border: '1px solid rgba(255,255,255,0.07)',
                   borderRadius: '14px',
                   minWidth: '90px',
@@ -206,7 +233,7 @@ export default function About() {
                   style={{
                     fontSize: '22px',
                     fontWeight: 800,
-                    color: '#B6FF3B',
+                    color: 'var(--accent)',
                     letterSpacing: '-0.03em',
                     lineHeight: 1,
                   }}
@@ -216,7 +243,7 @@ export default function About() {
                 <span
                   style={{
                     fontSize: '10px',
-                    color: 'rgba(255,255,255,0.3)',
+                    color: 'var(--text-primary)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
                   }}
@@ -232,11 +259,13 @@ export default function About() {
             RIGHT — Shared image
         ══════════════════════════════ */}
         <div
+          ref={ref}
           style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',
+            
           }}
         >
           {/* Decorative ring behind image */}
@@ -265,8 +294,11 @@ export default function About() {
 
           {/* ── THE SHARED IMAGE — layoutId matches Hero exactly ── */}
           <motion.div
-            layoutId={HERO_IMAGE_LAYOUT_ID}
+            initial={false}
             style={{
+                y,
+                opacity,
+                scale,
                 width: 'clamp(240px, 24vw, 320px)',
                 aspectRatio: '3/4',
                 borderRadius: '120px',
@@ -298,7 +330,7 @@ export default function About() {
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              background: '#B6FF3B',
+              background: 'var(--accent)',
               boxShadow: '0 0 12px rgba(182,255,59,0.6)',
             }}
           />
@@ -310,7 +342,7 @@ export default function About() {
               width: '5px',
               height: '5px',
               borderRadius: '50%',
-              background: '#B6FF3B',
+              background: 'var(--accent)',
               opacity: 0.4,
             }}
           />

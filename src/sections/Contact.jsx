@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react'
-import { motion, useAnimationFrame, useMotionValue, useTransform } from 'framer-motion'
+import { motion, useAnimationFrame, useMotionValue, useTransform, useScroll } from 'framer-motion'
 import { HERO_IMAGE_LAYOUT_ID } from '../data/sharedKeys'
+import photo from '../assets/mashood.jpeg'
+import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import emailjs from '@emailjs/browser'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -12,9 +15,9 @@ const fadeUp = (delay = 0) => ({
 })
 
 const socials = [
-  { label: 'LinkedIn',  href: 'https://linkedin.com/in/mahammad-mashood' },
-  { label: 'GitHub',    href: 'https://github.com/mashoodrenja17' },
-  { label: 'WhatsApp',  href: 'https://wa.me/917349596313' },
+  { label: 'LinkedIn',  href: 'https://linkedin.com/in/mahammad-mashood', icon: <FaLinkedin /> },
+  { label: 'GitHub',    href: 'https://github.com/mashood17', icon: <FaGithub /> },
+  { label: 'WhatsApp',  href: 'https://wa.me/917349596313', icon: <FaWhatsapp /> },
 ]
 
 // ── Slow floating animation via rAF ──
@@ -33,16 +36,61 @@ export default function Contact() {
   const [focused, setFocused] = useState(null)
   const [sending, setSending] = useState(false)
   const [sent, setSent]       = useState(false)
+  const formRef = useRef()
 
   function handleSubmit(e) {
-    e.preventDefault()
-    setSending(true)
-    setTimeout(() => { setSending(false); setSent(true) }, 1600)
-  }
+  e.preventDefault()
+  setSending(true)
+
+  emailjs.sendForm(
+    'service_9o28mrl',
+    'template_91vk28b',
+    formRef.current,
+    'QQX0pum_hfiITk3OI'
+  )
+  .then(() => {
+    setSending(false)
+    setSent(true)
+    formRef.current.reset()
+  })
+  .catch((error) => {
+    console.error(error)
+    setSending(false)
+    alert('Failed to send message')
+  })
+}
+
+  const sectionRef = useRef(null)
+
+    const { scrollYProgress } = useScroll({
+      target: sectionRef,
+      offset: ['start start', 'end end'],
+    })
+
+    const opacity = useTransform(scrollYProgress, [0, 0.3, 1], [1, 1, 0])
+    const scale   = useTransform(scrollYProgress, [0, 1], [1, 0.96])
+
+
 
   return (
+    
     <>
       <motion.section
+        ref={sectionRef}
+        style={{
+          width: '100%',
+          backgroundColor: 'var(--bg-primary)',
+          transition: 'background-color 0.35s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '120px 40px 100px',
+          position: 'relative',
+          overflow: 'hidden',
+          opacity,
+          scale,
+          willChange: 'transform, opacity',
+        }}
         id="contact"
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -50,7 +98,8 @@ export default function Contact() {
         transition={{ duration: 0.8, ease: EASE }}
         style={{
           width: '100%',
-          background: '#0e0e0e',
+          backgroundColor: 'var(--bg-primary)',
+            transition: 'background-color 0.35s ease',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -102,11 +151,14 @@ export default function Contact() {
               alignItems: 'center',
               gap: '28px',
               y: floatY,
+              scale: 1.02,
             }}
           >
             {/* Shared image — same layoutId as Hero & About */}
-            <motion.div
+           <motion.div
               layoutId={HERO_IMAGE_LAYOUT_ID}
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 width: '100%',
                 maxWidth: '340px',
@@ -115,38 +167,43 @@ export default function Contact() {
                 overflow: 'hidden',
                 border: '1px solid rgba(255,255,255,0.08)',
                 background: 'linear-gradient(160deg,#1a1a1a,#111)',
-                boxShadow: '0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(182,255,59,0.05)',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',               position: 'relative',
               }}
             >
-              {/*
-                Replace with your photo:
-                import photo from '../assets/mashood.jpg'
-                <img src={photo} alt="Mahammad Mashood"
-                  style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'top center'}} />
-              */}
+              {/* 🔥 IMAGE */}
+              <motion.img
+                src={photo}
+                alt="Profile"
+                initial={{ scale: 1.08 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top center',
+                }}
+              />
+
+              {/* 🔥 SUBTLE OVERLAY (premium touch) */}
               <div
                 style={{
-                  width: '100%', height: '100%',
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', justifyContent: 'center', gap: '12px',
-                  background: 'linear-gradient(160deg,#1c1c1c,#141414)',
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.35))',
+                  pointerEvents: 'none',
                 }}
-              >
-                <div
-                  style={{
-                    width: '72px', height: '72px', borderRadius: '50%',
-                    background: 'rgba(182,255,59,0.08)',
-                    border: '2px dashed rgba(182,255,59,0.18)',
-                    display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', fontSize: '26px',
-                  }}
-                >
-                  📷
-                </div>
-                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.18)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                  Add your photo
-                </span>
-              </div>
+              />
+
+              {/* 🔥 GLOW EDGE (premium effect) */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: '28px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',                  pointerEvents: 'none',
+                }}
+              />
             </motion.div>
 
             {/* Availability badge */}
@@ -154,19 +211,20 @@ export default function Contact() {
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '8px 18px', borderRadius: '999px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
+                background: 'var(--input-bg)',
+                border: '1px solid var(--card-border)',
+                }}
             >
               <div style={{ position: 'relative', width: '7px', height: '7px' }}>
                 <span style={{
                   position: 'absolute', inset: 0, borderRadius: '50%',
-                  background: '#B6FF3B', opacity: 0.5,
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--card-border)', opacity: 0.5,
                   animation: 'ping 1.8s cubic-bezier(0,0,0.2,1) infinite',
                 }} />
-                <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#22c55e' }} />
+                <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--accent)' }} />
               </div>
-              <span style={{ fontSize: '11.5px', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: '11.5px', color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
                 Available for new projects
               </span>
             </div>
@@ -175,36 +233,48 @@ export default function Contact() {
           {/* ══════════════════════════════
               RIGHT — content stack
           ══════════════════════════════ */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '60px',
+              padding: '40px',
+              borderRadius: '24px',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--card-border)',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',          
+            }}
+          >
 
             {/* ── Section header ── */}
             <motion.div {...fadeUp(0)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-                <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#B6FF3B', fontWeight: 600, fontFamily: 'monospace' }}>
+                <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
+                <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
                   CONNECT
                 </span>
-                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
+                <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
               </div>
 
               <h2
                 style={{
                   fontSize: 'clamp(36px, 4.5vw, 58px)',
-                  fontWeight: 900, color: '#ffffff',
+                  fontWeight: 900, color: 'var(--fg)',
                   letterSpacing: '-0.035em', lineHeight: 0.95,
                   margin: 0, fontFamily: "'Inter', sans-serif",
                 }}
               >
                 Let's Work{' '}
-                <span style={{ color: '#B6FF3B' }}>Together</span>
+                <span style={{ color: 'var(--accent)' }}>Together</span>
               </h2>
 
-              <div style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg,#B6FF3B,transparent)', borderRadius: '2px' }} />
+              <div style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg,var(--accent) 0%,transparent)', borderRadius: '2px' }} />
 
               <p
                 style={{
                   fontSize: '13.5px', lineHeight: 1.85,
-                  color: 'rgba(255,255,255,0.35)',
+                  color: 'var(--text-primary)',
                   maxWidth: '420px', margin: 0, fontWeight: 400,
                 }}
               >
@@ -216,7 +286,7 @@ export default function Contact() {
 
             {/* ── Block 1: Get in Touch ── */}
             <motion.div {...fadeUp(0.08)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>
+              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text-primary)', fontWeight: 600 }}>
                 Get in Touch
               </span>
 
@@ -247,7 +317,7 @@ export default function Contact() {
 
             {/* ── Block 2: Social Links ── */}
             <motion.div {...fadeUp(0.14)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>
+              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text-primary)', fontWeight: 600 }}>
                 Find me online
               </span>
 
@@ -266,18 +336,19 @@ export default function Contact() {
 
             {/* ── Block 3: Form ── */}
             <motion.div {...fadeUp(0.18)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>
+              <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text-primary)', fontWeight: 600 }}>
                 Send a Message
               </span>
 
               <form
+                ref={formRef}
                 onSubmit={handleSubmit}
                 style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
               >
                 {/* Name + Email row */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                  <Field id="name"    label="Name"    type="text"  placeholder="Mahammad"           focused={focused} setFocused={setFocused} />
-                  <Field id="email"   label="Email"   type="email" placeholder="you@example.com"    focused={focused} setFocused={setFocused} />
+                  <Field id="name"    label="Name"    type="text"  placeholder="Name"           focused={focused} setFocused={setFocused} />
+                  <Field id="email"   label="Email"   type="email" placeholder="Email"    focused={focused} setFocused={setFocused} />
                 </div>
                 <Field id="subject" label="Subject" type="text"  placeholder="Project inquiry…"    focused={focused} setFocused={setFocused} />
                 <Field id="message" label="Message" type="textarea" placeholder="Tell me about your project, idea, or opportunity…" focused={focused} setFocused={setFocused} rows={5} />
@@ -286,19 +357,24 @@ export default function Contact() {
                 <motion.button
                   type="submit"
                   disabled={sending || sent}
-                  whileHover={!sent ? { y: -3, boxShadow: '0 0 0 1px rgba(182,255,59,0.35), 0 12px 32px rgba(182,255,59,0.12)' } : {}}
+                  whileHover={!sent ? {
+                    y: -4,
+                    scale: 1.02,
+                  } : {}}
                   whileTap={!sent ? { scale: 0.97 } : {}}
                   transition={{ type: 'spring', stiffness: 280, damping: 24 }}
                   style={{
                     marginTop: '6px',
                     padding: '14px 32px',
                     borderRadius: '999px',
-                    background: sent ? 'rgba(182,255,59,0.12)' : '#B6FF3B',
-                    color: sent ? '#B6FF3B' : '#0e0e0e',
+                    background: sent ? 'rgba(182,255,59,0.12)' : 'rgba(223, 228, 214, 0.07)',
+                    color: 'var(--accent)',
                     fontSize: '13px',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
-                    border: sent ? '1px solid rgba(182,255,59,0.3)' : 'none',
+                    border: sent
+                      ? '1px solid rgba(182,255,59,0.5)'   // softer neon
+                      : '1px solid var(--card-border)',    // consistent border,
                     cursor: sending || sent ? 'default' : 'pointer',
                     alignSelf: 'flex-start',
                     outline: 'none',
@@ -324,7 +400,8 @@ export default function Contact() {
         transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
         style={{
           width: '100%',
-          background: '#0e0e0e',
+          backgroundColor: 'var(--card-bg)',
+            transition: 'background-color 0.35s ease',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -332,12 +409,24 @@ export default function Contact() {
           padding: '0 40px 52px',
         }}
       >
-        <div style={{ width: '100%', maxWidth: '1100px', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)', marginBottom: '36px' }} />
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.18)', letterSpacing: '0.06em' }}>
-          © 2026 Mahammad Mashood
+        <div style={{ width: '100%', maxWidth: '1100px', height: '1px', background: 'linear-gradient(90deg, transparent, var(--card-border), transparent)', marginBottom: '36px' }} />
+        <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>
+         <motion.span
+            whileHover={{ color: 'var(--accent)' }}
+            transition={{ duration: 0.2 }}
+          >
+            © 2026 Mahammad Mashood
+          </motion.span>
         </span>
-        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.1)', letterSpacing: '0.04em' }}>
+        <span style={{ fontSize: '11px', color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
           Built with precision and passion.
+        </span>
+        <span style={{
+          fontSize: '10px',
+          color: 'var(--text-primary)',
+          letterSpacing: '0.08em'
+        }}>
+          Crafted with intent · Designed for impact
         </span>
       </motion.footer>
 
@@ -345,7 +434,7 @@ export default function Contact() {
         @keyframes ping { 75%,100% { transform:scale(2.2); opacity:0; } }
         input:-webkit-autofill, textarea:-webkit-autofill {
           -webkit-box-shadow: 0 0 0 100px #151515 inset !important;
-          -webkit-text-fill-color: rgba(255,255,255,0.75) !important;
+          -webkit-text-fill-color: var(--text-primary) !important;
         }
       `}</style>
     </>
@@ -359,14 +448,14 @@ function ContactItem({ icon, label, value, href, isLink }) {
   return (
     <motion.a
       href={href}
-      whileHover={{ x: 2 }}
+      whileHover={{ x: 4, y: -1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 28 }}
       style={{
         display: 'flex',
         alignItems: 'center',
         gap: '16px',
         padding: '16px 0',
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
+        borderBottom: '1px solid var(--card-border)',
         textDecoration: 'none',
         cursor: 'pointer',
         outline: 'none',
@@ -376,8 +465,8 @@ function ContactItem({ icon, label, value, href, isLink }) {
       <div
         style={{
           width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
-          background: 'rgba(182,255,59,0.05)',
-          border: '1px solid rgba(182,255,59,0.09)',
+          background: 'var(--input-bg)',
+          border: '1px solid var(--card-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px',
         }}
       >
@@ -385,15 +474,15 @@ function ContactItem({ icon, label, value, href, isLink }) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
-        <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+        <span style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           {label}
         </span>
         <motion.span
-          whileHover={{ color: isLink ? '#B6FF3B' : '#ffffff' }}
+          whileHover={{ color: 'var(--text-primary)' }}
           transition={{ duration: 0.18 }}
           style={{
             fontSize: '14px', fontWeight: 600,
-            color: 'rgba(255,255,255,0.7)',
+            color: 'var(--text-primary)',
             letterSpacing: '-0.01em',
             textDecoration: isLink ? 'underline' : 'none',
             textDecorationColor: 'rgba(182,255,59,0)',
@@ -412,7 +501,7 @@ function ContactItem({ icon, label, value, href, isLink }) {
 /* ─────────────────────────────────────────
    SocialLink
 ───────────────────────────────────────── */
-function SocialLink({ label, href, index }) {
+function SocialLink({ label, href, icon, index }) {
   const [hovered, setHovered] = useState(false)
 
   return (
@@ -426,16 +515,15 @@ function SocialLink({ label, href, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, ease: EASE, delay: index * 0.07 }}
-      whileHover={{ y: -3, color: '#B6FF3B' }}
+      whileHover={{ y: -3, color: 'var(--accent)', boxShadow: '0 2px 6px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.2)' }}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
-        padding: '9px 18px',
-        borderRadius: '10px',
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        color: 'rgba(255,255,255,0.45)',
+        padding: '10px 20px',
+        borderRadius: '12px',
+        background: 'var(--card-bg)',
+        color: 'var(--text-primary)',
         fontSize: '12.5px',
         fontWeight: 550,
         letterSpacing: '0.04em',
@@ -443,11 +531,15 @@ function SocialLink({ label, href, index }) {
         cursor: 'pointer',
         willChange: 'transform',
         transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
-        borderColor: hovered ? 'rgba(182,255,59,0.15)' : 'rgba(255,255,255,0.06)',
-        background: hovered ? 'rgba(182,255,59,0.04)' : 'rgba(255,255,255,0.02)',
-      }}
+        borderColor: 'var(--card-border)',
+        background: 'var(--input-bg)',
+        border: '1px solid var(--card-border)',
+        }}
     >
-      {label}
+      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontSize: '14px' }}>{icon}</span>
+        {label}
+      </span>
       <motion.span
         animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : -4 }}
         transition={{ duration: 0.18, ease: EASE }}
@@ -463,60 +555,48 @@ function SocialLink({ label, href, index }) {
    Field — input + textarea
 ───────────────────────────────────────── */
 function Field({ id, label, type, placeholder, focused, setFocused, rows }) {
-  const isActive = focused === id
+  const isActive = focused === id   // ✅ REQUIRED
+
   const isTextarea = type === 'textarea'
   const Tag = isTextarea ? 'textarea' : 'input'
 
   return (
     <motion.div
-      animate={{ scale: isActive ? 1.008 : 1 }}
-      transition={{ duration: 0.22, ease: EASE }}
+      animate={{ scale: isActive ? 1.015 : 1 }}
+      transition={{ duration: 0.22 }}
       style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}
     >
       <label
         htmlFor={id}
         style={{
           fontSize: '10.5px',
-          color: isActive ? 'rgba(182,255,59,0.7)' : 'rgba(255,255,255,0.25)',
+          color: 'var(--accent)',
           textTransform: 'uppercase',
-          letterSpacing: '0.13em',
-          fontWeight: 600,
-          transition: 'color 0.2s ease',
         }}
       >
         {label}
       </label>
+
       <Tag
         id={id}
         name={id}
-        type={isTextarea ? undefined : type}
         placeholder={placeholder}
         rows={isTextarea ? rows : undefined}
         onFocus={() => setFocused(id)}
         onBlur={() => setFocused(null)}
         style={{
           width: '100%',
-          background: '#151515',
-          border: `1px solid ${isActive ? 'rgba(182,255,59,0.35)' : 'rgba(255,255,255,0.07)'}`,
+          background: 'var(--input-bg)',
+          border: '1px solid var(--card-border)',
           borderRadius: '12px',
           padding: isTextarea ? '14px 16px' : '12px 16px',
-          fontSize: '13.5px',
-          color: 'rgba(255,255,255,0.75)',
+          color: 'var(--text-primary)',
           outline: 'none',
-          resize: isTextarea ? 'vertical' : undefined,
-          fontFamily: "'Inter', sans-serif",
-          lineHeight: 1.6,
-          transition: 'border-color 0.22s ease, box-shadow 0.22s ease',
-          boxShadow: isActive
-            ? '0 0 0 3px rgba(182,255,59,0.07), 0 0 16px rgba(182,255,59,0.04)'
-            : '0 0 0 0px transparent',
-          caretColor: '#B6FF3B',
+
+          boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',
+          transition: 'all 0.2s ease',
         }}
       />
-
-      <style>{`
-        #${id}::placeholder { color: rgba(255,255,255,0.18); }
-      `}</style>
     </motion.div>
   )
 }

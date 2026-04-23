@@ -6,7 +6,6 @@ const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Blogs', href: '#blogs' },
 ]
 
 export default function Navbar() {
@@ -60,7 +59,7 @@ export default function Navbar() {
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '12px',
-              color: '#B6FF3B',
+              color: 'var(--accent)',
               fontWeight: 700,
             }}
           >
@@ -118,29 +117,65 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* ── RIGHT: Contact Button ── */}
-        <div style={{ paddingLeft: '8px', flexShrink: 0 }}>
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.15 }}
-            style={{
-              display: 'inline-block',
-              background: '#ffffff',
-              color: '#0e0e0e',
-              fontSize: '12.5px',
-              fontWeight: 600,
-              padding: '7px 16px',
-              borderRadius: '9999px',
-              textDecoration: 'none',
-              letterSpacing: '0.01em',
-              lineHeight: 1,
-            }}
-          >
-            Contact
-          </motion.a>
-        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '8px', flexShrink: 0 }}>
+
+        {/* Resume Button (Secondary Premium CTA) */}
+        <motion.a
+          href="/Mahammad_Mashood_FullStackDeveloper.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.2 }}
+          style={{
+            display: 'inline-block',
+            background: '#ffffff',
+            color: '#0e0e0e',
+            fontSize: '12.5px',
+            fontWeight: 600,
+            padding: '7px 16px',
+            borderRadius: '9999px',
+            textDecoration: 'none',
+            letterSpacing: '0.01em',
+            lineHeight: 1,
+            transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.border = '1px solid rgba(182,255,59,0.4)'
+            e.currentTarget.style.boxShadow = '0 0 12px rgba(182,255,59,0.15)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)'
+            e.currentTarget.style.boxShadow = 'none'
+          }}
+        >
+          Resume ↓
+        </motion.a>
+
+        {/* Contact Button (Primary CTA) */}
+        <motion.a
+          href="#contact"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.15 }}
+          style={{
+            display: 'inline-block',
+            background: '#ffffff',
+            color: '#0e0e0e',
+            fontSize: '12.5px',
+            fontWeight: 600,
+            padding: '7px 16px',
+            borderRadius: '9999px',
+            textDecoration: 'none',
+            letterSpacing: '0.01em',
+            lineHeight: 1,
+            transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)'
+          }}
+        >
+          Contact
+        </motion.a>
+
+      </div>
       </motion.nav>
 
       {/* Ping keyframe injected inline */}
