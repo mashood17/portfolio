@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import { useResponsive } from '../hooks/useResponsive'
 
 const publications = [
   {
@@ -21,6 +22,7 @@ const publications = [
 ]
 
 export default function Research() {
+  const { isMobile } = useResponsive()
   return (
     <motion.div style={{ z: 40 }}>
       <section
@@ -33,7 +35,7 @@ export default function Research() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '120px 40px',
+          padding: isMobile ? '80px 20px' : '120px 40px',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -84,7 +86,13 @@ export default function Research() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              textAlign: isMobile ? 'center' : 'left',
+            }}
             whileTap={{ scale: 0.98 }}
           >
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -104,10 +112,14 @@ export default function Research() {
               <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex',
+                alignItems: isMobile ? 'center' : 'flex-end',
+                justifyContent: isMobile ? 'center' : 'space-between',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? '10px' : '16px', flexWrap: 'wrap', gap: '16px' }}>
               <h2
                 style={{
-                  fontSize: 'clamp(40px, 5vw, 64px)',
+                  fontSize: isMobile ? '32px' : 'clamp(40px, 5vw, 64px)',
                   fontWeight: 900,
                   color: 'var(--fg)',
                   letterSpacing: '-0.035em',
@@ -154,7 +166,7 @@ export default function Research() {
           />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {publications.map((pub, i) => (
-              <PublicationCard key={i} pub={pub} index={i} />
+              <PublicationCard key={i} pub={pub} index={i} isMobile={isMobile} />
             ))}
           </div>
         </div>
@@ -163,7 +175,7 @@ export default function Research() {
   )
 }
 
-function PublicationCard({ pub, index }) {
+function PublicationCard({ pub, index, isMobile }) {
   const cardRef = useRef(null)
 
   // ── Magnetic tilt on mouse move ──
@@ -200,8 +212,8 @@ function PublicationCard({ pub, index }) {
         borderColor: 'rgba(182,255,59,0.18)',
       }}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
         transformStyle: 'preserve-3d',
         perspective: '1000px',
         background: 'rgba(255,255,255,0.025)',
@@ -209,7 +221,7 @@ function PublicationCard({ pub, index }) {
         WebkitBackdropFilter: 'blur(20px)',
         border: '1px solid rgba(255,255,255,0.07)',
         borderRadius: '24px',
-        padding: '48px 52px',
+        padding: isMobile ? '28px 20px' : '48px 52px',
         display: 'flex',
         flexDirection: 'column',
         gap: '32px',
@@ -307,6 +319,7 @@ function PublicationCard({ pub, index }) {
           display: 'flex',
           flexWrap: 'wrap',
           gap: '8px',
+          justifyContent: isMobile ? 'center' : 'flex-start',
         }}
       >
         {pub.meta.map(({ label, value }) => (
@@ -370,7 +383,7 @@ function PublicationCard({ pub, index }) {
           lineHeight: 1.85,
           color: 'var(--text-primary)',
           margin: 0,
-          maxWidth: '760px',
+          maxWidth: isMobile ? '100%' : '760px',
         }}
       >
         {pub.description}

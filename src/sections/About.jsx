@@ -2,6 +2,8 @@ import { HERO_IMAGE_LAYOUT_ID } from '../data/sharedKeys'
 import photo from '../assets/mashood.jpeg';
 import { useScroll, useTransform, motion } from 'framer-motion'
 import { useRef } from 'react'
+import { useResponsive } from '../hooks/useResponsive'
+
 
 
 const fadeUp = (delay = 0) => ({
@@ -12,6 +14,7 @@ const fadeUp = (delay = 0) => ({
 })
 
 export default function About() {
+    const { isMobile } = useResponsive()
     const ref = useRef(null)
 
     const { scrollYProgress } = useScroll({
@@ -74,15 +77,20 @@ export default function About() {
           width: '100%',
           maxWidth: '1200px',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '80px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '28px' : '80px',
           alignItems: 'center',
         }}
       >
         {/* ══════════════════════════════
             LEFT — Text content
         ══════════════════════════════ */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '32px',
+          alignItems: isMobile ? 'center' : 'flex-start',
+        }}>
 
           {/* Code-style title */}
           <motion.div {...fadeUp(0)}>
@@ -92,8 +100,9 @@ export default function About() {
                 alignItems: 'center',
                 gap: '6px',
                 marginBottom: '16px',
+                
               }}
-            >
+              >
               <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
               <span
                 style={{
@@ -163,10 +172,10 @@ export default function About() {
               fontSize: '15px',
               lineHeight: 1.85,
               color: 'var(--text-primary)',
-              maxWidth: '460px',
+              maxWidth: isMobile ? '100%' : '460px',
               margin: 0,
               fontWeight: 400,
-              textAlign: 'justify',
+              textAlign: isMobile ? 'center' : 'justify',
             }}
           >
            I'm a{' '}
@@ -261,7 +270,7 @@ export default function About() {
         <div
           ref={ref}
           style={{
-            display: 'flex',
+            display: isMobile ? 'none' : 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',

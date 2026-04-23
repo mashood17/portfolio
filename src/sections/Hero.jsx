@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import photo from '../assets/mashood.jpeg'
 import { useTheme } from '../hooks/useTheme'
+import { useResponsive } from '../hooks/useResponsive'
 
 const floatingDots = [
   { top: '18%', left: '8%',  size: 6 },
@@ -13,12 +14,10 @@ const floatingDots = [
 ]
 
 export default function Hero() {
+  const { isMobile } = useResponsive()
   const { isDark, toggleTheme } = useTheme()
   const sectionRef = useRef(null)
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -31,19 +30,25 @@ export default function Hero() {
     restDelta: 0.001,
   })
 
-  const textOpacity   = useTransform(smooth, [0, 0.35], [1, 0])
-  const textX_left    = useTransform(smooth, [0, 0.5],  ['0%', '-18%'])
-  const textX_right   = useTransform(smooth, [0, 0.5],  ['0%', '18%'])
-  const textBlur      = useTransform(smooth, [0, 0.35], [0, 12])
+  const imageY = useTransform(smooth, [0, 0.8], [0, isMobile ? 60 : 120])
+  const imageRotate = useTransform(smooth, [0, 0.6], [0, 6])
+  const textOpacity = useTransform(smooth, [0, 0.5], [1, 0])
+  const textX_left = isMobile
+    ? 0
+    : useTransform(smooth, [0, 0.5], ['0%', '-18%'])
+  const textX_right = isMobile
+    ? 0
+    : useTransform(smooth, [0, 0.5], ['0%', '18%'])
+  const textBlur = useTransform(smooth, [0, 0.35], [0, isMobile ? 0 : 12])
   const dotsOpacity   = useTransform(smooth, [0, 0.4],  [0.5, 0])
   const hiOpacity     = useTransform(smooth, [0, 0.3],  [1, 0])
   const hiScale       = useTransform(smooth, [0, 0.3],  [1, 0.6])
-  const toggleOpacity = useTransform(smooth, [0.2, 0.5],[1, 0])
-  const glowOpacity   = useTransform(smooth, [0, 0.6],  [0.04, 0.14])
+  const toggleOpacity = useTransform(smooth, [0.3, 0.7],[1, 0])
+  const glowOpacity = useTransform(smooth, [0, 0.6], [0.03, 0.08])
   const glowScale     = useTransform(smooth, [0, 0.6],  [1, 1.6])
-  const imageOpacity = useTransform(smooth, [0, 0.4], [1, 0])
-    const imageScale   = useTransform(smooth, [0, 0.4], [1, 0.92])
-    const imageBlur    = useTransform(smooth, [0, 0.4], [0, 6])
+  const imageOpacity = useTransform(smooth, [0, 0.75], [1, 0.15])
+  const imageScale = useTransform(smooth, [0, 0.75], [1, 0.88])
+  const imageBlur = useTransform(smooth, [0, 0.4], [0, isMobile ? 0 : 6])
 
   return (
     <section
@@ -60,9 +65,9 @@ export default function Hero() {
     >
       <div
         style={{
-          position: 'sticky', top: 0, height: '100vh',
+          position: isMobile ? 'relative' : 'sticky', top: 0, height: '100vh',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '100px 40px 60px', overflow: 'hidden',
+          padding: isMobile ? '100px 20px 60px' : '100px 40px 60px', overflow: 'hidden',
         }}
       >
         {/* Grain */}
@@ -78,7 +83,7 @@ export default function Hero() {
           position: 'absolute', top: '50%', left: '50%',
           translateX: '-50%', translateY: '-50%',
           width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(182,255,59,1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)',
           opacity: glowOpacity, scale: glowScale,
           pointerEvents: 'none', zIndex: 0,
         }} />
@@ -93,28 +98,56 @@ export default function Hero() {
         ))}
 
         {/* Hi bubble */}
-        <motion.div style={{
-          position: 'absolute', bottom: '15%', left: '35%',
-          width: '80px', height: '80px', borderRadius: '50%',
+        <motion.div
+        style={{
+          position: 'absolute',
+
+          bottom: isMobile ? '280px' : '15%',
+          left: isMobile ? '90px' : '35%',
+
+          width: isMobile ? '56px' : '80px',
+          height: isMobile ? '56px' : '80px',
+          borderRadius: '50%',
+
           background: 'var(--fg)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '40px', zIndex: 10,
-          boxShadow: isDark ? '0 0 20px rgba(255,255,255,0.5)' : '0 0 20px rgba(0,0,0,0.15)',
-          opacity: hiOpacity, scale: hiScale,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+
+          fontSize: isMobile ? '26px' : '40px',
+
+          zIndex: 10,
+
+          boxShadow: isDark
+            ? '0 0 20px rgba(255,255,255,0.5)'
+            : '0 0 20px rgba(0,0,0,0.15)',
+
+          opacity: hiOpacity,
+          scale: hiScale,
+
           transition: 'background 0.35s ease',
-        }}>
-          👋
-        </motion.div>
+        }}
+      >
+        👋
+      </motion.div>
 
         {/* 3-col grid */}
         <div style={{
           position: 'relative', zIndex: 2, width: '100%', maxWidth: '1200px',
-          display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'start',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr auto 1fr',
+          display: isMobile ? 'flex' : 'grid',
+          flexDirection: isMobile ? 'column' : undefined,
+          justifyItems: isMobile ? 'center' : 'stretch',
+          alignItems: isMobile ? 'center' : 'start',
+          gap: isMobile ? '32px' : '0px',
+          
         }}>
           {/* LEFT */}
           <motion.div style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
-            paddingRight: '32px', paddingTop: '150px',
+            display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-end',
+            paddingRight: isMobile ? '0px' : '32px',
+            paddingTop: isMobile ? '0px' : '150px',
+            textAlign: isMobile ? 'center' : 'right',
             opacity: textOpacity, x: textX_left,
             filter: useTransform(textBlur, v => `blur(${v}px)`),
             willChange: 'transform, opacity, filter',
@@ -128,10 +161,10 @@ export default function Hero() {
               Mahammad Mashood
             </span>
             <h1 style={{
-              fontSize: 'clamp(72px, 5vw, 120px)', fontWeight: 900,
+              fontSize: '68px', fontWeight: 900,
               color: 'var(--fg)', textTransform: 'uppercase',
               letterSpacing: '-0.04em', lineHeight: 0.88, margin: 0,
-              fontFamily: "'Inter', sans-serif", textAlign: 'right',
+              fontFamily: "'Inter', sans-serif", textAlign: isMobile ? 'center' : 'right',
               transition: 'color 0.35s ease',
             }}>
               Full Stack
@@ -144,9 +177,13 @@ export default function Hero() {
             alignItems: 'center', gap: '20px', zIndex: 5,
           }}>
             <motion.div
+              animate={{ y: isMobile ? [0, -4, 0] : [0, -6, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               style={{
-                width: 'clamp(220px, 22vw, 300px)', aspectRatio: '3/4',
+                width: isMobile ? '180px' : 'clamp(220px, 22vw, 300px)', aspectRatio: '3/4',
                 borderRadius: '120px', overflow: 'hidden',
+                y: imageY,
+                rotate: imageRotate,
                 border: '1px solid var(--border)',
                 background: 'linear-gradient(160deg,#1a1a1a,#111)',
                 position: 'relative',
@@ -163,59 +200,42 @@ export default function Hero() {
               />
             </motion.div>
 
-            {/* Theme toggle */}
-            <motion.div style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              opacity: toggleOpacity,
-            }}>
-              <span style={{
-                fontSize: '11px', color: 'var(--text-primary)',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
-                transition: 'color 0.35s ease',
-              }}>
-                {isDark ? 'Dark Mode' : 'Light Mode'}
-              </span>
-              <button
-                onClick={toggleTheme}
-                style={{
-                  width: '40px', height: '22px', borderRadius: '11px',
-                  background: isDark ? 'rgba(255,255,255,0.1)' : 'var(--accent)',
-                  border: '1px solid var(--border)',
-                  cursor: 'pointer', position: 'relative',
-                  transition: 'background 0.25s ease', flexShrink: 0, outline: 'none',
-                }}
-              >
-                <div style={{
-                  position: 'absolute', top: '3px',
-                  left: isDark ? '3px' : '21px',
-                  width: '14px', height: '14px', borderRadius: '50%',
-                  background: isDark ? 'rgba(255,255,255,0.6)' : '#0e0e0e',
-                  transition: 'left 0.25s cubic-bezier(0.22,1,0.36,1)',
-                }} />
-              </button>
-            </motion.div>
+
           </div>
 
           {/* RIGHT */}
           <motion.div style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
-            paddingLeft: '32px', paddingTop: '180px',
-            opacity: textOpacity, x: textX_right,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: isMobile ? 'center' : 'flex-start',
+            width: '100%', // ✅ IMPORTANT
+            paddingLeft: isMobile ? '0px' : '32px',
+            paddingTop: isMobile ? '0px' : '180px',
+            textAlign: isMobile ? 'center' : 'left',
+            opacity: textOpacity,
+            x: textX_right,
             filter: useTransform(textBlur, v => `blur(${v}px)`),
             willChange: 'transform, opacity, filter',
           }}>
             <h1 style={{
-              fontSize: 'clamp(72px, 5vw, 120px)', fontWeight: 900,
-              color: 'var(--fg)', textTransform: 'uppercase',
-              letterSpacing: '-0.04em', lineHeight: 0.88, margin: 0,
+              fontSize: '63px',
+              fontWeight: 900,
+              color: 'var(--fg)',
+              textTransform: 'uppercase',
+              letterSpacing: '-0.04em',
+              lineHeight: 0.88,
+              margin: 0,
               fontFamily: "'Inter', sans-serif",
+              width: '100%', 
+              textAlign: isMobile ? 'center' : 'left',
               transition: 'color 0.35s ease',
             }}>
               Developer
             </h1>
+            
             <div style={{
               width: '48px', height: '2px',
-              background: 'linear-gradient(90deg, #B6FF3B, transparent)',
+              background: 'linear-gradient(90deg, var(--accent), transparent)',
               borderRadius: '2px', marginTop: '12px',
             }} />
             <p style={{

@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion'
+import { useResponsive } from '../hooks/useResponsive'
+
 
 const skillGroups = [
   {
@@ -86,7 +88,7 @@ function SkillPill({ name, index }) {
   )
 }
 
-function SkillGroup({ group, groupIndex }) {
+function SkillGroup({ group, groupIndex, isMobile }) {
   return (
     <motion.div
       {...fadeUp(0.1 * groupIndex)}
@@ -137,7 +139,12 @@ function SkillGroup({ group, groupIndex }) {
       </div>
 
       {/* Skill pills */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '8px',
+        justifyContent: isMobile ? 'center' : 'flex-start',
+      }}>
         {group.skills.map((skill, i) => (
          <SkillPill key={`${skill}-${i}`} name={skill} index={i} />
         ))}
@@ -147,6 +154,8 @@ function SkillGroup({ group, groupIndex }) {
 }
 
 export default function Skills() {
+      const { isMobile } = useResponsive()
+
   return (
     <section
       id="skills"
@@ -199,8 +208,8 @@ export default function Skills() {
           width: '100%',
           maxWidth: '1200px',
           display: 'grid',
-          gridTemplateColumns: '1fr 1.4fr',
-          gap: '100px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr',
+          gap: isMobile ? '40px' : '100px',
           alignItems: 'start',
         }}
       >
@@ -209,11 +218,14 @@ export default function Skills() {
         ══════════════════════════ */}
         <div
           style={{
-            position: 'sticky',
-            top: '120px',
+            position: isMobile ? 'relative' : 'sticky',
+            top: isMobile ? 'auto' : '40px',
             display: 'flex',
             flexDirection: 'column',
             gap: '28px',
+            alignItems: isMobile ? 'center' : 'flex-start',
+            textAlign: isMobile ? 'center' : 'left',
+            
           }}
         >
           {/* Code label */}
@@ -272,7 +284,7 @@ export default function Skills() {
               fontSize: '13px',
               lineHeight: 1.8,
               color: 'var(--text-primary)',
-              maxWidth: '260px',
+              maxWidth: isMobile ? '100%' : '260px',
               margin: 0,
               fontWeight: 400,
             }}
@@ -318,9 +330,20 @@ export default function Skills() {
         {/* ══════════════════════════
             RIGHT — Skill groups
         ══════════════════════════ */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', paddingTop: '6px' }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '32px',
+          paddingTop: isMobile ? '0px' : '6px',
+          alignItems: isMobile ? 'center' : 'stretch',
+        }}>
           {skillGroups.map((group, i) => (
-            <SkillGroup key={group.title} group={group} groupIndex={i} />
+            <SkillGroup
+              key={group.title}
+              group={group}
+              groupIndex={i}
+              isMobile={isMobile}
+            />
           ))}
         </div>
       </div>

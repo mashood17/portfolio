@@ -168,6 +168,20 @@ html.light {
   --text-strong: #E6E6E6;   /* brighter for dark mode */
 }
 
+a {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+a:focus,
+a:active,
+a:visited {
+  text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
 .premium-hover:hover {
   transform: translateY(-4px) scale(1.02);
   box-shadow: 
@@ -182,4 +196,24 @@ html.light {
 
 .dark {
   --input-bg: rgba(255, 255, 255, 0.04);
+}
+
+/* Desktop (default) */
+.toggle-desktop {
+  display: flex;
+}
+
+.toggle-mobile {
+  display: none;
+}
+
+/* Mobile only */
+@media (max-width: 768px) {
+  .toggle-desktop {
+    display: none !important;
+  }
+
+  .toggle-mobile {
+    display: flex !important;
+  }
 }

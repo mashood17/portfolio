@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useTheme } from '../hooks/useTheme'
+import { useResponsive } from '../hooks/useResponsive'
 
 const certifications = [
   {
@@ -64,7 +65,7 @@ const cardVariants = {
 }
 
 export default function Certifications() {
-  const { isDark } = useTheme()
+  const { isMobile } = useResponsive()
   return (
     <section
       id="certifications"
@@ -75,7 +76,7 @@ export default function Certifications() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 40px',
+        padding: isMobile ? '80px 20px' : '120px 40px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -128,7 +129,13 @@ export default function Certifications() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.62, ease: EASE }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              textAlign: isMobile ? 'center' : 'left',
+            }}
         >
           {/* Code label */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -158,7 +165,7 @@ export default function Certifications() {
 
           <h2
             style={{
-              fontSize: 'clamp(34px, 4.5vw, 56px)',
+              fontSize: isMobile ? '30px' : 'clamp(34px, 4.5vw, 56px)',
               fontWeight: 900,
               color: 'var(--fg)',
               letterSpacing: '-0.035em',
@@ -181,7 +188,10 @@ export default function Certifications() {
           />
 
           {/* Count */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '4px' }}>
+          <div style={{ display: 'flex',
+            alignItems: 'baseline',
+            gap: '6px',
+            justifyContent: isMobile ? 'center' : 'flex-start', marginTop: '4px' }}>
             <span
               style={{
                 fontSize: '32px',
@@ -216,12 +226,14 @@ export default function Certifications() {
           viewport={{ once: true, margin: '-60px' }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '16px',
+            gridTemplateColumns: isMobile
+              ? '1fr'
+              : 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: isMobile ? '18px' : '16px',
           }}
         >
           {certifications.map((cert, i) => (
-            <CertCard key={i} cert={cert} />
+            <CertCard key={i} cert={cert} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
@@ -229,7 +241,7 @@ export default function Certifications() {
   )
 }
 
-function CertCard({ cert }) {
+function CertCard({ cert, isMobile }) {
   const { isDark } = useTheme()
   return (
     <motion.div
@@ -256,7 +268,7 @@ function CertCard({ cert }) {
         border: '1px solid var(--card-border)',
         boxShadow: 'var(--card-shadow)',
         borderRadius: '14px',
-        padding: '28px',
+        padding: isMobile ? '22px 18px' : '28px',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
@@ -265,7 +277,14 @@ function CertCard({ cert }) {
       }}
     >
       {/* ── Icon + title ── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+      <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '12px',
+          justifyContent: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left',
+          width: '100%',
+        }}>
         {/* Icon bubble */}
         <div
           style={{
@@ -314,7 +333,13 @@ function CertCard({ cert }) {
       />
 
       {/* ── Issuer + date ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          alignItems: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left',
+        }}>
         <span
           style={{
             fontSize: '12px',

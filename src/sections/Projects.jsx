@@ -5,6 +5,8 @@ import campusImg from '../assets/campusloop.png'
 import gitImg from '../assets/gitinsight.png'
 import aiImg from '../assets/aihub.png'
 import raceImg from '../assets/racezone2.png'
+import { useResponsive } from '../hooks/useResponsive'
+
 
 const projects = [
   {
@@ -77,7 +79,7 @@ const projects = [
   },
 ]
 
-function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
+function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile }) {
   const cardStart = index / total
   const cardEnd   = (index + 1) / total
 
@@ -103,34 +105,248 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
 
   // ── Theme-derived values ──
   const cardBg      = isDark ? project.darkBg      : project.lightBg
-  const overlayBg = isDark ? 'rgba(0,0,0,0.32)' : 'rgba(255,255,255,0.45)'
+  const overlayBg   = isDark ? 'rgba(0,0,0,0.32)' : 'rgba(255,255,255,0.45)'
   const indexColor  = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.25)'
   const btnBorder   = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'
   const btnBg       = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'
   const btnColor    = 'var(--accent)'
   const liveBg      = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'
   const liveColor   = 'var(--accent)'
-  const subtitleColor = 'var(--text-primary)'
-  const titleColor = 'var(--accent)'
-  const descColor   = 'var(--text-primary)'
-  const techColor   = 'var(--accent)'
-  const dotColor    = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'
-  const statColor   = 'var(--text-primary)'
-  const statBg      = 'var(--tech-bg)'
-  const statBorder  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'
 
+  // ─────────────────────────────────────────────────────────────
+  // MOBILE CARD: completely self-contained, flow layout, no sticky
+  // Root problem was position:absolute inset:0 inside a height-less
+  // container — everything collapsed to 0px on mobile.
+  // ─────────────────────────────────────────────────────────────
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          background: cardBg,
+          marginBottom: '32px',
+          transition: 'background 0.35s ease',
+        }}
+      >
+        {/* Pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: project.pattern, zIndex: 0 }} />
+
+        {/* Overlay */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, background: overlayBg, zIndex: 1,
+            transition: 'background 0.35s ease',
+          }}
+        />
+
+        {/* Grain */}
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: '128px', opacity: 0.04, zIndex: 2, pointerEvents: 'none',
+          }}
+        />
+
+        {/* Accent glows */}
+        <div
+          style={{
+            position: 'absolute', bottom: '-60px', left: '-60px',
+            width: '360px', height: '360px', borderRadius: '50%',
+            background: `radial-gradient(circle, ${project.accent}14 0%, transparent 65%)`,
+            zIndex: 2, pointerEvents: 'none',
+          }}
+        />
+
+        {/* Content — normal block flow so height is driven by content */}
+        <div style={{ position: 'relative', zIndex: 10, padding: '28px 20px 32px' }}>
+
+          {/* Top row: index + buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+            <span style={{ fontSize: '11px', color: indexColor, letterSpacing: '0.2em', fontFamily: 'monospace' }}>
+              {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+            </span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <motion.a
+                href={project.codeLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '5px',
+                  padding: '7px 13px', borderRadius: '999px',
+                  border: `1px solid ${btnBorder}`,
+                  background: btnBg, backdropFilter: 'blur(8px)',
+                  color: btnColor, fontSize: '11px', fontWeight: 600,
+                  textDecoration: 'none', letterSpacing: '0.04em',
+                }}
+              >
+                ⌘ Code
+              </motion.a>
+
+              <motion.a
+                href={project.liveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '5px',
+                  padding: '7px 13px', borderRadius: '999px',
+                  background: liveBg,
+                  border: `1px solid ${btnBorder}`,
+                  backdropFilter: 'blur(8px)',
+                  color: liveColor, fontSize: '11px', fontWeight: 600,
+                  textDecoration: 'none', letterSpacing: '0.04em',
+                }}
+              >
+                ↗ Live
+              </motion.a>
+            </div>
+          </div>
+
+          {/* Category pill */}
+          <div style={{ marginBottom: '10px' }}>
+            <span
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '5px 12px', borderRadius: '999px',
+                background: `${project.accent}1a`,
+                border: `1px solid ${project.accent}40`,
+                color: project.accent,
+                fontSize: '10px', fontWeight: 700,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+              }}
+            >
+              <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: project.accent }} />
+              {project.category}
+            </span>
+          </div>
+
+          {/* Subtitle */}
+          <div style={{ fontSize: '11px', color: 'var(--text-primary)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '6px' }}>
+            {project.subtitle}
+          </div>
+
+          {/* Title */}
+          <h2
+            style={{
+              fontSize: '38px', fontWeight: 900,
+              color: 'var(--accent)', letterSpacing: '-0.04em', lineHeight: 0.9,
+              margin: '0 0 12px 0',
+            }}
+          >
+            {project.title}
+          </h2>
+
+          {/* Accent rule */}
+          <div style={{ width: '36px', height: '1px', background: project.accent, opacity: 0.7, marginBottom: '14px' }} />
+
+          {/* Screenshot */}
+          <motion.img
+            src={project.image}
+            alt={project.title}
+            initial={{ opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            style={{
+              width: '100%',
+              height: '200px',
+              objectFit: 'cover',
+              borderRadius: '12px',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
+              boxShadow: isDark
+                ? '0 20px 60px rgba(0,0,0,0.7)'
+                : '0 12px 40px rgba(0,0,0,0.15)',
+              marginBottom: '18px',
+              display: 'block',
+            }}
+          />
+
+          {/* Description */}
+          <p style={{ fontSize: '13px', lineHeight: 1.75, color: 'var(--text-primary)', margin: '0 0 16px 0' }}>
+            {project.description}
+          </p>
+
+          {/* Tech pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: '16px' }}>
+            {project.tech.map((t) => (
+              <span
+                key={t}
+                style={{
+                  padding: '5px 11px',
+                  borderRadius: '999px',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.05em',
+                  color: 'var(--accent)',
+                  background: 'var(--tech-bg)',
+                  border: '1px solid var(--tech-border)',
+                }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+
+          {/* Stats */}
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '7px',
+              paddingLeft: '10px',
+              borderLeft: `2px solid ${project.accent}`,
+            }}
+          >
+            {project.stats.map((stat) => (
+              <span
+                key={stat}
+                style={{
+                  padding: '5px 12px',
+                  borderRadius: '8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: 'var(--text-primary)',
+                  background: 'var(--tech-bg)',
+                  border: '1px solid var(--tech-border)',
+                }}
+              >
+                {stat}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // DESKTOP CARD: unchanged from original
+  // ─────────────────────────────────────────────────────────────
   return (
     <div
       style={{
-        position: 'sticky', top: 0, height: '100vh', width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+        minHeight: '100vh',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         zIndex: index + 1,
       }}
     >
       <motion.div
         style={{
           width: '100%', height: '100%',
-          scale, y,
+          scale,
+          y,
           filter: useTransform(brightness, v => `brightness(${v})`),
           transformOrigin: 'top center',
           willChange: 'transform, filter',
@@ -148,7 +364,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
           {/* Pattern */}
           <div style={{ position: 'absolute', inset: 0, backgroundImage: project.pattern, zIndex: 0 }} />
 
-          {/* Overlay — dark dims, light brightens */}
+          {/* Overlay */}
           <div
             style={{
               position: 'absolute', inset: 0, background: overlayBg, zIndex: 1,
@@ -200,10 +416,6 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <motion.a
-                  className="premium-hover"
-                  style={{
-                    '--hover-accent': project.accent,
-                  }}
                   href={project.codeLink}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -224,10 +436,6 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
                 </motion.a>
 
                 <motion.a
-                  className="premium-hover"
-                  style={{
-                    '--hover-accent': project.accent,
-                  }}
                   href={project.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -252,10 +460,14 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
 
             {/* BOTTOM BLOCK */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '60px', alignItems: 'end' }}>
-              
-              {/* LEFT: TEXT (unchanged) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', maxWidth: '620px' }}>
 
+              {/* LEFT: TEXT */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '18px',
+                maxWidth: '620px',
+              }}>
                 <motion.span
                   initial={{ opacity: 0, x: -12 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -275,14 +487,14 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
                   {project.category}
                 </motion.span>
 
-                <div style={{ fontSize: '12px', color: subtitleColor, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-primary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   {project.subtitle}
                 </div>
 
                 <h2
                   style={{
                     fontSize: 'clamp(48px, 7vw, 96px)', fontWeight: 900,
-                    color: titleColor, letterSpacing: '-0.04em', lineHeight: 0.88,
+                    color: 'var(--accent)', letterSpacing: '-0.04em', lineHeight: 0.88,
                     margin: 0,
                   }}
                 >
@@ -293,7 +505,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
 
                 <p
                   style={{
-                    fontSize: '13.5px', lineHeight: 1.75, color: descColor,
+                    fontSize: '13.5px', lineHeight: 1.75, color: 'var(--text-primary)',
                     margin: 0,
                   }}
                 >
@@ -301,110 +513,89 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
                 </p>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {project.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="premium-hover"
-                    style={{
-                      '--hover-accent': project.accent,
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="premium-hover"
+                      style={{
+                        '--hover-accent': project.accent,
+                        padding: '6px 12px',
+                        borderRadius: '999px',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        letterSpacing: '0.05em',
+                        color: 'var(--accent)',
+                        background: 'var(--tech-bg)',
+                        border: '1px solid var(--tech-border)',
+                        backdropFilter: 'blur(6px)',
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
 
-                      padding: '6px 12px',
-                      borderRadius: '999px',
-                      fontSize: '11px',
-                      fontWeight: 500,
-                      letterSpacing: '0.05em',
-
-                      color: 'var(--accent)',
-                      background: 'var(--tech-bg)',
-                      border: '1px solid var(--tech-border)',
-                      backdropFilter: 'blur(6px)',
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              {/* RIGHT: STATS (same as before) */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',   // 🔥 KEY LINE
-                  gap: '8px',
-                  marginTop: '12px',
-                  alignItems: 'flex-start',  // keep left aligned
-                  borderLeft: `2px solid ${project.accent}`,
-                  paddingLeft: '10px',    
-                }}
-              >
-                {project.stats.map((stat) => (
-                  <span
-                    key={stat}
-                    className="premium-hover"
-                    style={{
-                      '--hover-accent': project.accent,
-
-                      padding: '6px 14px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: 600,
-
-                      color: 'var(--text-primary)',
-                      background: 'var(--tech-bg)',
-                      border: '1px solid var(--tech-border)',
-                    }}
-                  >
-                    {stat}
-                  </span>
-                ))}
+                {/* Stats inside left col on desktop */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    marginTop: '12px',
+                    borderLeft: `2px solid ${project.accent}`,
+                    paddingLeft: '10px',
+                  }}
+                >
+                  {project.stats.map((stat) => (
+                    <span
+                      key={stat}
+                      className="premium-hover"
+                      style={{
+                        '--hover-accent': project.accent,
+                        padding: '6px 14px',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        background: 'var(--tech-bg)',
+                        border: '1px solid var(--tech-border)',
+                      }}
+                    >
+                      {stat}
+                    </span>
+                  ))}
+                </div>
               </div>
 
+              {/* RIGHT: SCREENSHOT */}
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <motion.img
+                  src={project.image}
+                  alt={project.title}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  whileHover={{
+                    scale: 1.12,
+                    y: -8,
+                    boxShadow: `0 40px 100px rgba(0,0,0,0.5), 0 0 50px ${project.accent}`,
+                    filter: 'brightness(1.1)',
+                    rotate: 0.8,
+                  }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  style={{
+                    width: '100%',
+                    height: '240px',
+                    maxWidth: '360px',
+                    borderRadius: '14px',
+                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
+                    backdropFilter: 'blur(6px)',
+                    objectFit: 'cover',
+                    boxShadow: isDark
+                      ? '0 30px 80px rgba(0,0,0,0.8)'
+                      : '0 20px 60px rgba(0,0,0,0.2)',
+                  }}
+                />
               </div>
-
-              {/* 🟢 MIDDLE: SCREENSHOT (THIS IS WHAT YOU WANTED) */}
-             <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <motion.img
-                src={project.image}
-                alt={project.title}
-                
-
-                initial={{ opacity: 0, scale: 0.92 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-
-                whileHover={{
-                  scale: 1.12,
-                  y: -8,
-                  boxShadow: `0 40px 100px rgba(0,0,0,0.5), 0 0 50px ${project.accent}`,
-                  filter: 'brightness(1.1)',
-                  rotate: 0.8,
-                }}
-
-                transition={{ duration: 0.4, ease: 'easeOut' }}
-
-                style={{
-                  width: '100%',     
-                  alignItems: 'center',
-                  overflow: 'visible',         // ✅ FIX
-                  maxWidth: '360px',          // control size
-                  height: '240px',
-
-                  borderRadius: '14px',
-                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
-                  backdropFilter: 'blur(6px)',
-
-                  objectFit: 'cover',         // keeps it nicely cropped
-
-                  boxShadow: isDark
-                    ? '0 30px 80px rgba(0,0,0,0.8)'
-                    : '0 20px 60px rgba(0,0,0,0.2)',
-                }}
-              />
-            </div>
             </div>
           </motion.div>
         </div>
@@ -414,14 +605,16 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark }) {
 }
 
 export default function Projects() {
+  const { isMobile } = useResponsive()
   const { isDark } = useTheme()
   const containerRef = useRef(null)
   const total = projects.length
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
+  const { scrollYProgress } = useScroll(
+    isMobile
+      ? { target: containerRef, offset: ['start end', 'end start'] }
+      : { target: containerRef, offset: ['start start', 'end end'] }
+  )
 
   return (
     <section
@@ -433,7 +626,7 @@ export default function Projects() {
       <div
         style={{
           position: 'relative', zIndex: 0,
-          padding: '100px 72px 60px',
+          padding: isMobile ? '60px 20px 40px' : '100px 72px 60px',
           backgroundColor: 'var(--bg)',
           display: 'flex', flexDirection: 'column', gap: '16px',
           transition: 'background-color 0.35s ease',
@@ -465,34 +658,55 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* Progress dots */}
-      <div
-        style={{
-          position: 'sticky', top: '50%', zIndex: 100, pointerEvents: 'none',
-          display: 'flex', justifyContent: 'flex-end',
-          paddingRight: '32px', marginTop: '-12px',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
-          {projects.map((_, i) => (
-            <ScrollDot key={i} index={i} total={total} scrollYProgress={scrollYProgress} />
+      {/* Progress dots — desktop only */}
+      {!isMobile && (
+        <div
+          style={{
+            position: 'sticky', top: '50%', zIndex: 100, pointerEvents: 'none',
+            display: 'flex', justifyContent: 'flex-end',
+            paddingRight: '32px', marginTop: '-12px',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
+            {projects.map((_, i) => (
+              <ScrollDot key={i} index={i} total={total} scrollYProgress={scrollYProgress} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Cards */}
+      {isMobile ? (
+        // Mobile: simple vertical stack with padding, no scroll tricks
+        <div style={{ padding: '0 16px 48px' }}>
+          {projects.map((project, i) => (
+            <ProjectCard
+              isMobile={true}
+              key={project.id}
+              project={project}
+              index={i}
+              total={total}
+              scrollYProgress={scrollYProgress}
+              isDark={isDark}
+            />
           ))}
         </div>
-      </div>
-
-      {/* Stacked cards */}
-      <div style={{ height: `${total * 100}vh` }}>
-        {projects.map((project, i) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            index={i}
-            total={total}
-            scrollYProgress={scrollYProgress}
-            isDark={isDark}
-          />
-        ))}
-      </div>
+      ) : (
+        // Desktop: sticky scroll stack, unchanged
+        <div style={{ height: `${total * 100}vh` }}>
+          {projects.map((project, i) => (
+            <ProjectCard
+              isMobile={false}
+              key={project.id}
+              project={project}
+              index={i}
+              total={total}
+              scrollYProgress={scrollYProgress}
+              isDark={isDark}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }

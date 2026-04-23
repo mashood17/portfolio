@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useResponsive } from '../hooks/useResponsive'
 
 const education = [
   {
@@ -45,6 +46,7 @@ const fadeUp = (delay = 0) => ({
 })
 
 export default function Education() {
+  const { isMobile } = useResponsive()
   return (
     <section
       id="education"
@@ -55,7 +57,7 @@ export default function Education() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 40px',
+        padding: isMobile ? '80px 20px' : '120px 40px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -105,7 +107,13 @@ export default function Education() {
         ══════════════════ */}
         <motion.div
           {...fadeUp(0)}
-          style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          style={{
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  alignItems: isMobile ? 'center' : 'flex-start',
+  textAlign: isMobile ? 'center' : 'left',
+}}
         >
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
@@ -126,7 +134,7 @@ export default function Education() {
 
           <h2
             style={{
-              fontSize: 'clamp(36px, 5vw, 58px)',
+              fontSize: isMobile ? '30px' : 'clamp(36px, 5vw, 58px)',
               fontWeight: 900,
               color: 'var(--fg)',
               letterSpacing: '-0.035em',
@@ -152,9 +160,15 @@ export default function Education() {
         {/* ══════════════════
             Cards — staggered
         ══════════════════ */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          alignItems: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left',
+        }}>
           {education.map((item, i) => (
-            <EducationCard key={i} item={item} index={i} />
+            <EducationCard key={i} item={item} index={i} isMobile={isMobile} />
           ))}
         </div>
       </div>
@@ -162,7 +176,7 @@ export default function Education() {
   )
 }
 
-function EducationCard({ item, index }) {
+function EducationCard({ item, index, isMobile }) {
   return (
     <motion.div
       // ── 1. Sequential scroll reveal: each card waits for the previous ──
@@ -200,6 +214,7 @@ function EducationCard({ item, index }) {
       style={{
         background: 'var(--card-bg)',
         border: '1px solid var(--card-border)',
+        width: '100%',
         boxShadow: 'var(--card-shadow)',
         borderRadius: '16px',
         padding: '32px 36px',
@@ -215,13 +230,19 @@ function EducationCard({ item, index }) {
         style={{
           display: 'flex',
           alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: '16px',
+          justifyContent: isMobile ? 'flex-start' : 'space-between',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '10px' : '16px',
           flexWrap: 'wrap',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-          {/* Icon bubble */}
+        <div style={{ display: 'flex',
+          alignItems: 'flex-start',
+          gap: '14px',
+          width: '100%',
+          justifyContent: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left', }}>
+                    {/* Icon bubble */}
           <div
             style={{
               width: '40px',
@@ -277,7 +298,7 @@ function EducationCard({ item, index }) {
             borderRadius: '999px',
             letterSpacing: '0.06em',
             whiteSpace: 'nowrap',
-            alignSelf: 'flex-start',
+            alignSelf: isMobile ? 'center' : 'flex-start',
             marginTop: '2px',
           }}
         >
@@ -295,16 +316,13 @@ function EducationCard({ item, index }) {
       />
 
       {/* ── Bullets — stagger within card ── */}
-      <ul
-        style={{
-          listStyle: 'none',
-          padding: 0,
-          margin: 0,
+      <ul style={{
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
-        }}
-      >
+          alignItems: isMobile ? 'center' : 'flex-start',
+          textAlign: isMobile ? 'center' : 'left',
+        }}>
         {item.bullets.map((point, i) => (
           <motion.li
             key={i}

@@ -1,6 +1,7 @@
 import { motion, useSpring, useInView } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { useResponsive } from '../hooks/useResponsive'
 
 const languages = [
   { name: 'English',   level: 'Professional',   pips: 4, tag: 'C1' },
@@ -28,6 +29,7 @@ const levelOpacity = {
 }
 
 export default function Languages() {
+  const { isMobile } = useResponsive()
   const { isDark } = useTheme()
   const sectionRef = useRef(null)
   const isInView   = useInView(sectionRef, { once: true, margin: '-80px' })
@@ -52,7 +54,7 @@ export default function Languages() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 40px',
+        padding: isMobile ? '80px 20px' : '120px 40px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -88,7 +90,13 @@ export default function Languages() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.6, ease: EASE }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              textAlign: isMobile ? 'center' : 'left',
+            }}
         >
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ color: bracketColor, fontSize: '13px', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>&lt;</span>
@@ -124,6 +132,7 @@ export default function Languages() {
         }}>
           {languages.map((lang, i) => (
             <LanguageRow
+              isMobile={isMobile}
               key={lang.name}
               lang={lang}
               index={i}
@@ -157,9 +166,15 @@ export default function Languages() {
 /* ─────────────────────────────
    Pip indicator (replaces bar)
 ───────────────────────────── */
-function PipIndicator({ pips, accent, delay, parentInView }) {
+function PipIndicator({ pips, accent, delay, parentInView, isMobile }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: isMobile ? 'center' : 'flex-start',
+      gap: '5px',
+      flexShrink: 0,
+    }}>
       {Array.from({ length: MAX_PIPS }).map((_, i) => {
         const filled = i < pips
         return (
@@ -195,7 +210,7 @@ function PipIndicator({ pips, accent, delay, parentInView }) {
 /* ─────────────────────────────
    Language row
 ───────────────────────────── */
-function LanguageRow({ lang, index, total, isDark, dividerColor, parentInView }) {
+function LanguageRow({ lang, index, total, isDark, dividerColor, parentInView, isMobile }) {
   const isLast  = index === total - 1
   const accent  = levelAccent[lang.level]
   const rowDelay = 0.08 + index * 0.07
@@ -215,17 +230,19 @@ function LanguageRow({ lang, index, total, isDark, dividerColor, parentInView })
       whileHover={{ backgroundColor: isDark ? 'rgba(182,255,59,0.03)' : 'rgba(182,255,59,0.05)' }}
       style={{
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'center' : 'center',
         justifyContent: 'space-between',
-        padding: '20px 28px',
-        borderBottom: isLast ? 'none' : `1px solid ${dividerColor}`,
-        cursor: 'default',
-        gap: '20px',
+        padding: isMobile ? '18px 16px' : '20px 28px',
+        gap: isMobile ? '12px' : '20px',
+        textAlign: isMobile ? 'center' : 'left',
         transition: 'background-color 0.2s ease',
       }}
     >
       {/* LEFT: dot + name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 0 auto', minWidth: '130px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 0 auto',
+          minWidth: isMobile ? 'auto' : '130px',
+          justifyContent: isMobile ? 'center' : 'flex-start', }}>
         {/* Accent dot — size reflects level */}
         <motion.div
           whileHover={{ scale: 1.8 }}
@@ -242,7 +259,7 @@ function LanguageRow({ lang, index, total, isDark, dividerColor, parentInView })
           whileHover={{ color: 'var(--text-primary)' }}
           transition={{ duration: 0.15 }}
           style={{
-            fontSize: '15.5px', fontWeight: 650,
+            fontSize: isMobile ? '14px' : '15.5px', fontWeight: 650,
             color: nameColor,
             letterSpacing: '-0.01em',
             fontFamily: "'Inter', sans-serif",
@@ -262,7 +279,11 @@ function LanguageRow({ lang, index, total, isDark, dividerColor, parentInView })
       />
 
       {/* RIGHT: level + tag */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '0 0 auto' }}>
+      <div style={{ display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        flex: '0 0 auto',
+        justifyContent: isMobile ? 'center' : 'flex-end', }}>
         <motion.span
           whileHover={{ color: 'var(--accent)' }}
           transition={{ duration: 0.18 }}

@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion'
 import { useTheme } from '../hooks/useTheme'
+import { useResponsive } from '../hooks/useResponsive'
+
+
 
 const experiences = [
   {
@@ -27,6 +30,7 @@ const fadeUp = (delay = 0) => ({
 })
 
 export default function Experience() {
+  const { isMobile } = useResponsive()
   const { isDark } = useTheme()
 
   const mutedText   = 'var(--text-primary)'
@@ -47,7 +51,7 @@ export default function Experience() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 40px',
+        padding: isMobile ? '80px 20px' : '120px 40px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -79,8 +83,8 @@ export default function Experience() {
           position: 'relative', zIndex: 2,
           width: '100%', maxWidth: '1200px',
           display: 'grid',
-          gridTemplateColumns: '1fr 1.6fr',
-          gap: '100px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1.6fr',
+          gap: isMobile ? '40px' : '100px',
           alignItems: 'start',
         }}
       >
@@ -89,8 +93,11 @@ export default function Experience() {
         ══════════════════════════ */}
         <div
           style={{
-            position: 'sticky', top: '120px',
+            position: isMobile ? 'relative' : 'sticky',
+            top: isMobile ? 'auto' : '120px',
             display: 'flex', flexDirection: 'column', gap: '24px',
+            alignItems: isMobile ? 'center' : 'flex-start',
+            textAlign: isMobile ? 'center' : 'left',
           }}
         >
           {/* Code label */}
@@ -134,7 +141,7 @@ export default function Experience() {
             {...fadeUp(0.16)}
             style={{
               fontSize: '13px', lineHeight: 1.8,
-              color: mutedText, maxWidth: '240px', margin: 0,
+              color: mutedText, maxWidth: isMobile ? '100%' : '240px', margin: 0,
               transition: 'color 0.35s ease',
             }}
           >
@@ -160,7 +167,13 @@ export default function Experience() {
         ══════════════════════════ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '4px' }}>
           {experiences.map((exp, i) => (
-            <ExperienceCard key={i} exp={exp} index={i} isDark={isDark} />
+            <ExperienceCard
+              key={i}
+              exp={exp}
+              index={i}
+              isDark={isDark}
+              isMobile={isMobile}
+            />
           ))}
         </div>
       </div>
@@ -170,7 +183,7 @@ export default function Experience() {
   )
 }
 
-function ExperienceCard({ exp, index, isDark }) {
+function ExperienceCard({ exp, index, isDark, isMobile }) {
   const cardBg      = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'
   const cardBorder  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'
   const periodColor = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)'
@@ -226,7 +239,7 @@ function ExperienceCard({ exp, index, isDark }) {
         WebkitBackdropFilter: 'blur(16px)',
         border: `1px solid ${cardBorder}`,
         borderRadius: '20px',
-        padding: '36px',
+        padding: isMobile ? '24px 18px' : '36px',
         display: 'flex',
         flexDirection: 'column',
         gap: '28px',

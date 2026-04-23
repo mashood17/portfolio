@@ -4,6 +4,7 @@ import { HERO_IMAGE_LAYOUT_ID } from '../data/sharedKeys'
 import photo from '../assets/mashood.jpeg'
 import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import emailjs from '@emailjs/browser'
+import { useResponsive } from '../hooks/useResponsive'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -32,6 +33,7 @@ function useFloat(range = 10, speed = 0.0008) {
 }
 
 export default function Contact() {
+  const { isMobile } = useResponsive()
   const floatY = useFloat(7, 0.00055)
   const [focused, setFocused] = useState(null)
   const [sending, setSending] = useState(false)
@@ -84,7 +86,7 @@ export default function Contact() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '120px 40px 100px',
+          padding: isMobile ? '80px 20px 60px' : '120px 40px 100px',
           position: 'relative',
           overflow: 'hidden',
           opacity,
@@ -103,7 +105,7 @@ export default function Contact() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '120px 40px 100px',
+          padding: isMobile ? '80px 20px 60px' : '120px 40px 100px',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -134,8 +136,8 @@ export default function Contact() {
             position: 'relative', zIndex: 2,
             width: '100%', maxWidth: '1100px',
             display: 'grid',
-            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.35fr)',
-            gap: '80px',
+            gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.35fr)',
+            gap: isMobile ? '40px' : '80px',
             alignItems: 'start',
           }}
         >
@@ -144,8 +146,8 @@ export default function Contact() {
           ══════════════════════════════ */}
           <motion.div
             style={{
-              position: 'sticky',
-              top: '120px',
+              position: isMobile ? 'relative' : 'sticky',
+              top: isMobile ? '0px' : '120px',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -161,7 +163,7 @@ export default function Contact() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 width: '100%',
-                maxWidth: '340px',
+                maxWidth: isMobile ? '220px' : '340px',
                 aspectRatio: '3/4',
                 borderRadius: '28px',
                 overflow: 'hidden',
@@ -237,8 +239,8 @@ export default function Contact() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '60px',
-              padding: '40px',
+              padding: isMobile ? '24px 18px' : '40px',
+              gap: isMobile ? '40px' : '60px',
               borderRadius: '24px',
               background: 'var(--input-bg)',
               border: '1px solid var(--card-border)',
@@ -248,7 +250,13 @@ export default function Contact() {
           >
 
             {/* ── Section header ── */}
-            <motion.div {...fadeUp(0)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <motion.div {...fadeUp(0)} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              textAlign: isMobile ? 'center' : 'left',
+            }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
                 <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
@@ -346,7 +354,7 @@ export default function Contact() {
                 style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
               >
                 {/* Name + Email row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '14px' }}>
                   <Field id="name"    label="Name"    type="text"  placeholder="Name"           focused={focused} setFocused={setFocused} />
                   <Field id="email"   label="Email"   type="email" placeholder="Email"    focused={focused} setFocused={setFocused} />
                 </div>
@@ -376,7 +384,7 @@ export default function Contact() {
                       ? '1px solid rgba(182,255,59,0.5)'   // softer neon
                       : '1px solid var(--card-border)',    // consistent border,
                     cursor: sending || sent ? 'default' : 'pointer',
-                    alignSelf: 'flex-start',
+                    alignSelf: isMobile ? 'center' : 'flex-start',
                     outline: 'none',
                     opacity: sending ? 0.7 : 1,
                     transition: 'background 0.3s ease, color 0.3s ease, opacity 0.2s ease',
@@ -406,7 +414,7 @@ export default function Contact() {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '6px',
-          padding: '0 40px 52px',
+          padding: isMobile ? '0 20px 40px' : '0 40px 52px',
         }}
       >
         <div style={{ width: '100%', maxWidth: '1100px', height: '1px', background: 'linear-gradient(90deg, transparent, var(--card-border), transparent)', marginBottom: '36px' }} />
