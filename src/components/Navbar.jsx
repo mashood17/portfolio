@@ -263,62 +263,127 @@ export default function Navbar() {
           )}
         </motion.nav>
           {isMobile && menuOpen && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.25 }}
-            style={{
-              position: 'fixed',
-              pointerEvents: 'auto',
-              top: 0,
-              right: 0,
-              height: '100vh',
-              width: '70%',
-              background: 'rgba(0,0,0,0.95)',
-              backdropFilter: 'blur(20px)',
-              borderLeft: '1px solid rgba(255,255,255,0.1)',
-              padding: '80px 20px',
-              zIndex: 999,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-            }}
-          >
-            
-            <button
-              onClick={() => setMenuOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                fontSize: '22px',
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                cursor: 'pointer',
-              }}
-            >
-              ✕
-            </button>
-            {navLinks.map(({ label, href }) => (
-      <a
-        key={label}
-        href={href}
+  <>
+    {/* BACKDROP */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setMenuOpen(false)}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.65)',
+        backdropFilter: 'blur(10px)',
+        zIndex: 998,
+      }}
+    />
+
+    {/* FULLSCREEN MENU */}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999,
+
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        gap: '28px',
+      }}
+    >
+
+      {/* CLOSE */}
+      <button
         onClick={() => setMenuOpen(false)}
         style={{
+          position: 'absolute',
+          top: '24px',
+          right: '24px',
+          width: '42px',
+          height: '42px',
+          borderRadius: '50%',
+          border: '1px solid rgba(255,255,255,0.12)',
+          background: 'rgba(255,255,255,0.06)',
           color: 'white',
           fontSize: '18px',
-          fontWeight: 500,
-          textDecoration: 'none',
         }}
       >
-        {label}
-      </a>
-    ))}
+        ✕
+      </button>
+
+      {/* BRAND (PREMIUM TOUCH) */}
+      <div style={{
+        fontSize: '12px',
+        letterSpacing: '0.25em',
+        color: 'rgba(255,255,255,0.5)',
+        marginBottom: '10px',
+      }}>
+        NAVIGATION
+      </div>
+
+      {/* LINKS */}
+      {navLinks.map(({ label, href }, i) => (
+        <motion.a
+          key={label}
+          href={href}
+          onClick={() => setMenuOpen(false)}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 * i }}
+          style={{
+            fontSize: '28px',
+            fontWeight: 600,
+            color: 'white',
+            textDecoration: 'none',
+            letterSpacing: '-0.02em',
+
+            transition: 'all 0.25s ease',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = 'var(--accent)'
+            e.currentTarget.style.transform = 'scale(1.05)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = 'white'
+            e.currentTarget.style.transform = 'scale(1)'
+          }}
+        >
+          {label}
+        </motion.a>
+      ))}
+
+      {/* EXTRA CTA (VERY PREMIUM) */}
+      <motion.a
+        href="#contact"
+        onClick={() => setMenuOpen(false)}
+        whileTap={{ scale: 0.95 }}
+        style={{
+          marginTop: '20px',
+          padding: '10px 18px',
+          borderRadius: '999px',
+          background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))',
+          color: '#C9A84C',
+          fontWeight: 700,
+          border: 'none',
+          boxShadow: '0 6px 20px rgba(182,255,59,0.35)',
+          textDecoration: 'none',
+          fontSize: '13px',
+          letterSpacing: '0.08em',
+        }}
+      >
+        CONTACT
+      </motion.a>
 
     </motion.div>
-          )}
+  </>
+)}                   
           {/* Ping keyframe injected inline */}
           <style>{`
             @keyframes ping {
