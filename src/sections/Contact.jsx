@@ -69,7 +69,6 @@ export default function Contact() {
       offset: ['start start', 'end end'],
     })
 
-    const opacity = useTransform(scrollYProgress, [0, 0.3, 1], [1, 1, 0])
     const scale   = useTransform(scrollYProgress, [0, 1], [1, 0.96])
 
 
@@ -89,26 +88,13 @@ export default function Contact() {
           padding: isMobile ? '80px 20px 60px' : '120px 40px 100px',
           position: 'relative',
           overflow: 'hidden',
-          opacity,
           scale,
-          willChange: 'transform, opacity',
         }}
         id="contact"
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.8, ease: EASE }}
-        style={{
-          width: '100%',
-          backgroundColor: 'var(--bg-primary)',
-            transition: 'background-color 0.35s ease',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: isMobile ? '80px 20px 60px' : '120px 40px 100px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
       >
         {/* ── Grain ── */}
         <div
@@ -440,9 +426,11 @@ export default function Contact() {
 
       <style>{`
         @keyframes ping { 75%,100% { transform:scale(2.2); opacity:0; } }
-        input:-webkit-autofill, textarea:-webkit-autofill {
-          -webkit-box-shadow: 0 0 0 100px #151515 inset !important;
+        input:-webkit-autofill,
+        textarea:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 100px var(--input-bg) inset !important;
           -webkit-text-fill-color: var(--text-primary) !important;
+          transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
     </>
@@ -588,6 +576,7 @@ function Field({ id, label, type, placeholder, focused, setFocused, rows }) {
       <Tag
         id={id}
         name={id}
+        required
         placeholder={placeholder}
         rows={isTextarea ? rows : undefined}
         onFocus={() => setFocused(id)}
