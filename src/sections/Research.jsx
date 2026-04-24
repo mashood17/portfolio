@@ -95,22 +95,7 @@ export default function Research() {
             }}
             whileTap={{ scale: 0.98 }}
           >
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-              <span
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'var(--accent)',
-                  fontWeight: 600,
-                  fontFamily: 'monospace',
-                }}
-              >
-                RESEARCH
-              </span>
-              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
-            </div>
+            
 
             <div style={{ display: 'flex',
                 alignItems: isMobile ? 'center' : 'flex-end',
@@ -217,7 +202,7 @@ function PublicationCard({ pub, index, isMobile }) {
         transformStyle: 'preserve-3d',
         perspective: '1000px',
         background: 'rgba(255,255,255,0.025)',
-        backdropFilter: 'blur(20px)',
+        backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: '1px solid rgba(255,255,255,0.07)',
         borderRadius: '24px',

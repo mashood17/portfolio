@@ -180,7 +180,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
                   display: 'inline-flex', alignItems: 'center', gap: '5px',
                   padding: '7px 13px', borderRadius: '999px',
                   border: `1px solid ${btnBorder}`,
-                  background: btnBg, backdropFilter: 'blur(8px)',
+                  background: btnBg, backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
                   color: btnColor, fontSize: '11px', fontWeight: 600,
                   textDecoration: 'none', letterSpacing: '0.04em',
                 }}
@@ -198,7 +198,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
                   padding: '7px 13px', borderRadius: '999px',
                   background: liveBg,
                   border: `1px solid ${btnBorder}`,
-                  backdropFilter: 'blur(8px)',
+                  backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
                   color: liveColor, fontSize: '11px', fontWeight: 600,
                   textDecoration: 'none', letterSpacing: '0.04em',
                 }}
@@ -446,7 +446,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
                     padding: '8px 16px', borderRadius: '999px',
                     background: liveBg,
                     border: `1px solid ${btnBorder}`,
-                    backdropFilter: 'blur(8px)',
+                    backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
                     color: liveColor, fontSize: '12px', fontWeight: 600,
                     textDecoration: 'none', letterSpacing: '0.04em',
                     transition: 'background 0.2s, color 0.2s, border-color 0.35s ease',
@@ -527,7 +527,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
                         color: 'var(--accent)',
                         background: 'var(--tech-bg)',
                         border: '1px solid var(--tech-border)',
-                        backdropFilter: 'blur(6px)',
+                        backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
                       }}
                     >
                       {t}
@@ -588,7 +588,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
                     maxWidth: '360px',
                     borderRadius: '14px',
                     border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'}`,
-                    backdropFilter: 'blur(6px)',
+                    backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
                     objectFit: 'cover',
                     boxShadow: isDark
                       ? '0 30px 80px rgba(0,0,0,0.8)'
@@ -632,13 +632,7 @@ export default function Projects() {
           transition: 'background-color 0.35s ease',
         }}
       >
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ color: 'var(--fg-muted)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-          <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
-            PROJECTS
-          </span>
-          <span style={{ color: 'var(--fg-muted)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
-        </div>
+        
 
         <h2
           style={{

@@ -91,54 +91,59 @@ function SkillPill({ name, index }) {
 function SkillGroup({ group, groupIndex, isMobile }) {
   return (
     <motion.div
-      {...fadeUp(0.1 * groupIndex)}
+      {...fadeUp(0.08 * groupIndex)}
+      whileHover={{ y: -4, borderColor: 'rgba(182,255,59,0.18)' }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
-        paddingBottom: '32px',
-        borderBottom: groupIndex < skillGroups.length - 1
-          ? '1px solid rgba(255,255,255,0.05)'
-          : 'none',
+        gap: '20px',
+        padding: isMobile ? '20px 16px' : '28px 24px',
+        borderRadius: '16px',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
+        boxShadow: 'var(--card-shadow)',
+        transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
+        willChange: 'transform',
+        cursor: 'default',
       }}
     >
-      {/* Group header */}
+      {/* ── Header ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span
-          style={{
-            fontSize: '15px',
-            color: 'var(--accent)',
-            opacity: 0.8,
-            lineHeight: 1,
-            fontFamily: 'monospace',
-          }}
-        >
+        <div style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '8px',
+          background: 'rgba(182,255,59,0.07)',
+          border: '1px solid rgba(182,255,59,0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '15px',
+          flexShrink: 0,
+        }}>
           {group.icon}
-        </span>
-        <span
-          style={{
-            fontSize: '11px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.16em',
-            color: 'var(--accent)',
-            fontWeight: 600,
-          }}
-        >
+        </div>
+
+        <span style={{
+          fontSize: '11px',
+          textTransform: 'uppercase',
+          letterSpacing: '0.16em',
+          color: 'var(--accent)',
+          fontWeight: 700,
+        }}>
           {group.title}
         </span>
 
-        {/* Hairline from title to edge */}
-        <div
-          style={{
-            flex: 1,
-            height: '1px',
-            background: 'linear-gradient(90deg, rgba(255,255,255,0.06) 0%, transparent 100%)',
-            marginLeft: '4px',
-          }}
-        />
+        <div style={{
+          flex: 1,
+          height: '1px',
+          background: 'linear-gradient(90deg, rgba(182,255,59,0.1) 0%, transparent 100%)',
+          marginLeft: '4px',
+        }} />
       </div>
 
-      {/* Skill pills */}
+      {/* ── Skills ── */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
@@ -146,7 +151,7 @@ function SkillGroup({ group, groupIndex, isMobile }) {
         justifyContent: isMobile ? 'center' : 'flex-start',
       }}>
         {group.skills.map((skill, i) => (
-         <SkillPill key={`${skill}-${i}`} name={skill} index={i} />
+          <SkillPill key={`${skill}-${i}`} name={skill} index={i} />
         ))}
       </div>
     </motion.div>
@@ -229,24 +234,7 @@ export default function Skills() {
           }}
         >
           {/* Code label */}
-          <motion.div {...fadeUp(0)}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-              <span
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'var(--accent)',
-                  fontWeight: 600,
-                  fontFamily: 'monospace',
-                }}
-              >
-                SKILLS
-              </span>
-              <span style={{ color: 'var(--text-primary)rgba(255,255,255,0.2)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
-            </div>
-          </motion.div>
+        
 
           {/* Main heading */}
           <motion.h2

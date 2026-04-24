@@ -11,6 +11,8 @@ import Education from './sections/Education'
 import Certifications from './sections/Certifications'
 import Languages from './sections/Languages'
 import Contact from './sections/Contact'
+import SectionDivider from './components/SectionDivider'
+
 
 export default function App() {
   const { isDark } = useTheme()
@@ -27,14 +29,22 @@ export default function App() {
       >
         <Navbar />
         <Hero />
+        <SectionDivider />
         <About />
+        <SectionDivider />
         <Skills />
+        <SectionDivider />
         <Projects />
+        <SectionDivider />
         <Experience />
+        <SectionDivider />
         <Research />
+        <SectionDivider />
         <Education />
         <Certifications />
+        <SectionDivider />
         <Languages />
+        <SectionDivider />
         <Contact />
       </main>
     </LayoutGroup>

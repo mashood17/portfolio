@@ -98,13 +98,7 @@ export default function Languages() {
               textAlign: isMobile ? 'center' : 'left',
             }}
         >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: bracketColor, fontSize: '13px', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>&lt;</span>
-            <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
-              LANGUAGES
-            </span>
-            <span style={{ color: bracketColor, fontSize: '13px', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>/&gt;</span>
-          </div>
+          
 
           <h2 style={{
             fontSize: 'clamp(34px, 4.5vw, 56px)', fontWeight: 900,
@@ -123,7 +117,7 @@ export default function Languages() {
         <div style={{
           borderRadius: '20px',
           background: cardBg,
-          backdropFilter: 'blur(20px)',
+          backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: `1px solid ${cardBorder}`,
           boxShadow: cardShadow,

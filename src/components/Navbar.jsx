@@ -2,7 +2,8 @@ import { motion } from 'framer-motion'
 import photo from '../assets/mashood2.jpeg'
 import { useResponsive } from '../hooks/useResponsive'
 import { useTheme } from '../hooks/useTheme'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -14,26 +15,42 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { isMobile } = useResponsive()
   const { isDark, toggleTheme } = useTheme()
+  
+
   return (
-        <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-3">      <motion.nav
+        <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-3">      
+        <motion.nav
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         whileHover={{
           boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
-        }}        style={{
-          background: 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+        }}        
+        style={{
+          background: isDark 
+            ? 'var(--glass-bg-dark)' 
+            : 'var(--glass-bg-light)',
+          border: isDark
+            ? '1px solid var(--glass-border-dark)'
+            : '1px solid var(--glass-border-light)',
+
+          backdropFilter: isMobile ? 'blur(12px)' : 'blur(18px)',
+          WebkitBackdropFilter: isMobile ? 'blur(12px)' : 'blur(18px)',
+
           borderRadius: '9999px',
           display: 'flex',
           alignItems: 'center',
           gap: isMobile ? '6px' : '2px',
           padding: isMobile ? '10px 10px' : '6px 8px',
           maxWidth: isMobile ? '95%' : '700px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+
+          boxShadow: isDark
+            ? '0 6px 20px rgba(0,0,0,0.25)'
+            : '0 6px 20px rgba(0,0,0,0.08)',
+
           width: 'fit-content',
+
+          transition: 'all 0.3s cubic-bezier(0.22,1,0.36,1)',
         }}
       >
         {/* ── LEFT: Avatar + Status ── */}
@@ -104,7 +121,7 @@ export default function Navbar() {
             <span
               style={{
                 fontSize: '11.5px',
-                color: 'rgba(255,255,255,0.65)',
+                color: 'var(--glass-text)',
                 whiteSpace: 'nowrap',
                 letterSpacing: '0.01em',
                 fontWeight: 400,
@@ -114,7 +131,7 @@ export default function Navbar() {
               <span
                 style={{
                   fontSize: '11.5px',
-                  color: 'rgba(255,255,255,0.65)',
+                  color: 'var(--glass-text)',
                   whiteSpace: 'nowrap',
                   letterSpacing: '0.01em',
                   fontWeight: 400,
@@ -136,8 +153,7 @@ export default function Navbar() {
             maxWidth: isMobile ? '160px' : 'none',
             }}>
           {navLinks.map(({ label, href }) => (
-            <NavLink key={label} href={href} label={label} isMobile={isMobile} />
-          ))}
+            <NavLink key={label} href={href} label={label} isMobile={isMobile} isDark={isDark} />          ))}
         </div>
 
         <div style={{
@@ -253,7 +269,7 @@ export default function Navbar() {
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.12)',
                 fontSize: '18px',
-                color: 'white',
+                color: isDark ? 'white' : 'black',
                 cursor: 'pointer',
                 flexShrink: 0, // ✅ important
               }}
@@ -311,7 +327,7 @@ export default function Navbar() {
           borderRadius: '50%',
           border: '1px solid rgba(255,255,255,0.12)',
           background: 'rgba(255,255,255,0.06)',
-          color: 'white',
+          color: isDark ? 'white' : 'black',
           fontSize: '18px',
         }}
       >
@@ -394,7 +410,7 @@ export default function Navbar() {
   )
 }
 
-function NavLink({ href, label, isMobile }) {
+function NavLink({ href, label, isMobile, isDark }) {
   return (
     <motion.a
       href={href}
@@ -407,7 +423,9 @@ function NavLink({ href, label, isMobile }) {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'rgba(255,255,255,0.7)',
+        color: isDark 
+          ? 'var(--glass-text-dark)' 
+          : 'var(--glass-text-light)',
         fontWeight: 450,
         borderRadius: '9999px',
         textDecoration: 'none',

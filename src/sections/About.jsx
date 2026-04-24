@@ -92,32 +92,7 @@ export default function About() {
           alignItems: isMobile ? 'center' : 'flex-start',
         }}>
 
-          {/* Code-style title */}
           <motion.div {...fadeUp(0)}>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                marginBottom: '16px',
-                
-              }}
-              >
-              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-              <span
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: 'var(--accent)',
-                  fontWeight: 600,
-                  fontFamily: 'monospace',
-                }}
-              >
-                ABOUT ME
-              </span>
-              <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
-            </div>
 
             <h2
               style={{

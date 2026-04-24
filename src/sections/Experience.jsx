@@ -100,16 +100,7 @@ export default function Experience() {
             textAlign: isMobile ? 'center' : 'left',
           }}
         >
-          {/* Code label */}
-          <motion.div {...fadeUp(0)}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: bracketColor, fontSize: '13px', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>&lt;</span>
-              <span style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 600, fontFamily: 'monospace' }}>
-                EXPERIENCE
-              </span>
-              <span style={{ color: bracketColor, fontSize: '13px', fontFamily: 'monospace', transition: 'color 0.35s ease' }}>/&gt;</span>
-            </div>
-          </motion.div>
+        
 
           {/* Heading */}
           <motion.h2
@@ -235,7 +226,7 @@ function ExperienceCard({ exp, index, isDark, isMobile }) {
         position: 'relative',
         overflow: 'hidden',
         background: cardBg,
-        backdropFilter: 'blur(16px)',
+        backdropFilter: isMobile ? 'blur(10px)' : 'blur(28px)',
         WebkitBackdropFilter: 'blur(16px)',
         border: `1px solid ${cardBorder}`,
         borderRadius: '20px',

@@ -115,22 +115,7 @@ export default function Education() {
   textAlign: isMobile ? 'center' : 'left',
 }}
         >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>&lt;</span>
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: 'var(--accent)',
-                fontWeight: 600,
-                fontFamily: 'monospace',
-              }}
-            >
-              EDUCATION
-            </span>
-            <span style={{ color: 'var(--text-primary)', fontSize: '13px', fontFamily: 'monospace' }}>/&gt;</span>
-          </div>
+          
 
           <h2
             style={{
