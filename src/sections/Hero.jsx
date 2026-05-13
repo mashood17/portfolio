@@ -244,8 +244,7 @@ export default function Hero() {
               letterSpacing: '0.01em', fontWeight: 400,
               transition: 'color 0.35s ease',
             }}>
-              Building intelligent, scalable web applications from the ground up — JWT-secured APIs,
-              real-time systems, and pixel-perfect UI engineering.
+              Building scalable full-stack applications with secure APIs, real-time systems, and modern UI experiences.
             </p>
           </motion.div>
         </div>

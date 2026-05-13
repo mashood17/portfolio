@@ -6,32 +6,91 @@ const skillGroups = [
   {
     icon: '💻',
     title: 'Frontend',
-    skills: ['React.js', 'JavaScript ES6+', 'Framer Motion', 'Tailwind CSS', 'Tailwind CSS', 'HTML5', 'CSS3', 'Component Architecture',],
+    skills: [
+      'React.js',
+      'JavaScript',
+      'Framer Motion',
+      'Tailwind CSS',
+      'HTML5',
+      'CSS3',
+    ],
   },
+
+  {
+    icon: '📱',
+    title: 'Android',
+    skills: [
+      'Kotlin',
+      'Java',
+      'Android Studio',
+      'XML Layouts',
+      'RecyclerView',
+      'ViewBinding',
+      'Activity Lifecycle',
+      'Firebase Authentication',
+      'Cloud Firestore',
+    ],
+  },
+
   {
     icon: '⚙️',
     title: 'Backend',
-    skills: ['Flask', 'Node.js', 'REST APIs', 'JWT Auth', 'WebSockets', 'Flask-SocketIO'],
+    skills: [
+      'Flask',
+      'Node.js',
+      'REST APIs',
+      'WebSockets',
+      'Flask-SocketIO',
+    ],
   },
+
   {
     icon: '🗄️',
     title: 'Database',
-    skills: ['PostgreSQL', 'MongoDB', 'MySQL', 'Supabase'],
+    skills: [
+      'PostgreSQL',
+      'MongoDB',
+      'MySQL',
+      'Supabase',
+      'Firebase Firestore',
+    ],
   },
+
   {
     icon: '🔐',
     title: 'Auth & Security',
-    skills: ['JWT Auth', 'Token Rotation', 'Axios Interceptors', 'Refresh Tokens'],
+    skills: [
+      'JWT Authentication',
+      'Token Rotation',
+      'Axios Interceptors',
+      'Refresh Tokens',
+      'OTP Authentication',
+    ],
   },
+
   {
     icon: '🧪',
-    title: 'Testiing',
-    skills: ['Pytest', 'Locust (Load Testing)'],
+    title: 'Testing',
+    skills: [
+      'Pytest',
+      'Locust (Load Testing)',
+      'Debugging & Testing',
+    ],
   },
+
   {
     icon: '🛠️',
     title: 'Tools & Deploy',
-    skills: ['Git, GitHub', 'Postman', 'Docker', 'Vercel', 'Render'],
+    skills: [
+      'Git',
+      'GitHub',
+      'GitHub Copilot',
+      'Gemini',
+      'Postman',
+      'Docker',
+      'Vercel',
+      'Render',
+    ],
   },
 ]
 
@@ -280,39 +339,6 @@ export default function Skills() {
             Tools and technologies I use to ship production-grade applications
             from API to interface.
           </motion.p>
-
-          {/* Count badge */}
-          <motion.div
-            {...fadeUp(0.22)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'baseline',
-              gap: '6px',
-              marginTop: '8px',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '36px',
-                fontWeight: 900,
-                color: 'var(--fg)',
-                letterSpacing: '-0.04em',
-                lineHeight: 1,
-              }}
-            >
-              {skillGroups.reduce((acc, g) => acc + g.skills.length, 0)}
-            </span>
-            <span
-              style={{
-                fontSize: '11px',
-                color: 'var(--text-primary)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.12em',
-              }}
-            >
-              Technologies
-            </span>
-          </motion.div>
         </div>
 
         {/* ══════════════════════════

@@ -163,12 +163,10 @@ export default function About() {
 
           <br /><br />
 
-          Built and deployed 3 production projects, published a research paper, and consistently ship ideas to production.
-            <br /><br />
+          Built and deployed multiple full-stack applications, published a research paper, and actively work on real-world software projects. 
+            <br />
 
-            <span style={{ opacity: 0.7 }}>
-            Based in Mangaluru, Karnataka.
-            </span>
+           
 
           </motion.p>
 
@@ -195,8 +193,7 @@ export default function About() {
             style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '8px', color:"var(--fg-muted", }}
           >
             {[
-              { value: '1+', label: 'Years Building' },
-              { value: '3+', label: 'Projects Deployed' },
+              { value: '4+', label: 'Projects Deployed' },
               { value: 'Full', label: 'Stack Dev' },
             ].map(({ value, label }) => (
               <div

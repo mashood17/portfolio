@@ -6,17 +6,32 @@ import { useResponsive } from '../hooks/useResponsive'
 
 const experiences = [
   {
-    role: 'Android App Development using Gen AI',
+    role: 'Android App Development Intern',
     company: 'Mind Matrix',
-    period: 'Feb 2026 – Present',
+    period: 'Feb 2026 – May 2026',
     type: 'Internship',
-    status: 'current',
+    codeLink: 'https://github.com/mashood17/RaktaVahini',
+    apkLink: 'YOUR_APK_LINK',
     bullets: [
-      'Building Android applications using Java/Kotlin in Android Studio, implementing UI components and activity lifecycle management in a project-based environment.',
-      'Leveraging GenAI tools (GitHub Copilot, Gemini) to accelerate development workflows and improve code quality across assigned modules.',
-      'Collaborating via Git-based version control and structured peer debugging practices.',
+      'Developed “Rakta-Vahini,” a real-time blood donor network app using Kotlin and Firebase.',
+      'Implemented OTP authentication, donor eligibility logic, and real-time donor search with Firestore.',
+      'Built Android UI flows using XML, RecyclerView, ViewBinding, and activity lifecycle management.',
+      'Used Gemini and GitHub Copilot to accelerate debugging, feature development, and code optimization.',
+      'Resolved Firebase, Gradle, and Firestore integration issues through systematic debugging and testing.',
+      'Managed project development using Git-based version control and collaborative debugging workflows.',
     ],
-    tech: ['Kotlin', 'Java', 'Gemini', 'GitHub Copilot', 'Android Studio', 'Git'],
+    tech: [
+      'Kotlin',
+      'Firebase Authentication',
+      'Cloud Firestore',
+      'Android Studio',
+      'XML',
+      'RecyclerView',
+      'ViewBinding',
+      'Git',
+      'GitHub Copilot',
+      'Gemini',
+    ],
   },
 ]
 
@@ -184,6 +199,15 @@ function ExperienceCard({ exp, index, isDark, isMobile }) {
   const chipColor   = 'var(--accent)'
   const chipBg      = 'var(--tech-bg)'
   const chipBorder  = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.07)'
+  const btnBorder = isDark
+  ? 'rgba(255,255,255,0.12)'
+  : 'rgba(0,0,0,0.12)'
+
+const btnBg = isDark
+  ? 'rgba(255,255,255,0.05)'
+  : 'rgba(0,0,0,0.04)'
+
+const apkBg = 'var(--accent)'
   const boxShadow = isDark
     ? '0 10px 40px rgba(0,0,0,0.4)'
     : '0 10px 40px rgba(0,0,0,0.08)'
@@ -275,22 +299,130 @@ function ExperienceCard({ exp, index, isDark, isMobile }) {
         </div>
 
         {/* Badges */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', flexShrink: 0 }}>
-          {exp.status === 'current' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <div style={{ position: 'relative', width: '7px', height: '7px' }}>
-                <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--accent)', opacity: 0.5, animation: 'ping 1.6s cubic-bezier(0,0,0.2,1) infinite' }} />
-                <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#22c55e' }} />
-              </div>
-              <span style={{ fontSize: '10px', color: currentColor, letterSpacing: '0.1em', textTransform: 'uppercase', transition: 'color 0.35s ease' }}>
-                Current
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '12px',
+            flexShrink: 0,
+          }}
+        >
+          {/* Buttons */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            
+            <motion.a
+              href={exp.codeLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{
+                scale: 1.05,
+                borderColor: 'var(--accent)',
+              }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                borderRadius: '999px',
+                border: `1px solid ${btnBorder}`,
+                background: btnBg,
+                backdropFilter: 'blur(18px)',
+                color: 'var(--accent)',
+                fontSize: '11px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                letterSpacing: '0.04em',
+              }}
+            >
+              ⌘ Code
+            </motion.a>
 
-              </span>
-            </div>
-          )}
-          <span style={{ fontSize: '10px', color: 'rgba(182,255,59,0.8)', background: 'rgba(182,255,59,0.08)', border: '1px solid rgba(182,255,59,0.18)', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
-            {exp.type}
-          </span>
+            <motion.a
+              href={exp.apkLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{
+                scale: 1.05,
+                y: -2,
+                boxShadow: '0 0 30px rgba(182,255,59,0.25)',
+              }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                borderRadius: '999px',
+                background: apkBg,
+                color: 'var(--bg)',
+                fontSize: '11px',
+                fontWeight: 700,
+                textDecoration: 'none',
+                letterSpacing: '0.04em',
+                border: '1px solid transparent',
+              }}
+            >
+              ↓ APK
+            </motion.a>
+          </div>
+
+          {/* Status */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+            
+            {exp.status === 'current' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ position: 'relative', width: '7px', height: '7px' }}>
+                  <span
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: '50%',
+                      background: 'var(--accent)',
+                      opacity: 0.5,
+                      animation: 'ping 1.6s cubic-bezier(0,0,0.2,1) infinite',
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: '50%',
+                      background: '#22c55e',
+                    }}
+                  />
+                </div>
+
+                <span
+                  style={{
+                    fontSize: '10px',
+                    color: currentColor,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Current
+                </span>
+              </div>
+            )}
+
+            <span
+              style={{
+                fontSize: '10px',
+                color: 'var(--accent)',
+                background: 'var(--tech-bg)',
+                border: '1px solid rgba(182,255,59,0.18)',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+              }}
+            >
+              {exp.type}
+            </span>
+          </div>
         </div>
       </div>
 

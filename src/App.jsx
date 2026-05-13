@@ -41,6 +41,7 @@ export default function App() {
         <Research />
         <SectionDivider />
         <Education />
+        <SectionDivider />
         <Certifications />
         <SectionDivider />
         <Languages />
