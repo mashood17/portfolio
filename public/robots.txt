@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-lyart-six-37.vercel.app/sitemap.xml
