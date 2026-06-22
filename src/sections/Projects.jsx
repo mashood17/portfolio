@@ -83,25 +83,83 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
   const cardStart = index / total
   const cardEnd   = (index + 1) / total
 
-  const rawScale = useTransform(scrollYProgress, [cardStart - 1 / total, cardStart], [0.94, 1])
-  const rawY     = useTransform(scrollYProgress, [cardStart - 1 / total, cardStart], ['6%', '0%'])
-  const exitScale = useTransform(scrollYProgress, [cardStart, cardEnd], [1, index < total - 1 ? 0.91 : 1])
-  const exitY     = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', index < total - 1 ? '-3%' : '0%'])
+  // ─────────────────────────────────────────────────────────────
+  // OPTIMIZED TRANSFORM ARCHITECTURE
+  //
+  // Previously this section built FOUR separate range-transforms
+  // (rawScale, rawY, exitScale, exitY), then combined them with TWO
+  // function-transforms that called .get() on the others every frame,
+  // then springed the result. That meant every scroll frame did:
+  // 4 range lookups + 4 redundant .get() reads + 2 branch evaluations
+  // = 10 operations per card just to produce 2 final numbers.
+  //
+  // Framer Motion's array-based useTransform already does "which
+  // segment am I in, then linearly interpolate" internally, in code
+  // that's been optimized for exactly this. So instead of computing
+  // both the entry and exit curve every frame and picking one with a
+  // branch, we hand it ONE ordered breakpoint table per value and let
+  // it do that lookup natively. The output curve is mathematically
+  // identical — same breakpoints, same values, same piecewise-linear
+  // interpolation — just computed once instead of twice-and-discarded.
+  //
+  // Card 0 has no "rise in from below" phase (nothing is pushing it
+  // up from off-stage), so its breakpoint table is shorter — this
+  // reproduces the old `if (index === 0) return exitScale.get()`
+  // branch, but as a static table shape instead of a per-frame check.
+  // ─────────────────────────────────────────────────────────────
 
-  const combinedScale = useTransform(scrollYProgress, (v) => {
-    if (index === 0) return exitScale.get()
-    return v < cardStart ? rawScale.get() : exitScale.get()
-  })
-  const combinedY = useTransform(scrollYProgress, (v) => {
-    if (index === 0) return exitY.get()
-    return v < cardStart ? rawY.get() : exitY.get()
-  })
+  const prevStart = index === 0 ? cardStart : cardStart - 1 / total
 
+  const scaleBreakpoints = index === 0
+    ? [cardStart, cardEnd]
+    : [prevStart, cardStart, cardEnd]
+
+  const scaleValues = index === 0
+    ? [1, index < total - 1 ? 0.91 : 1]
+    : [0.94, 1, index < total - 1 ? 0.91 : 1]
+
+  const yBreakpoints = scaleBreakpoints
+
+  const yValues = index === 0
+    ? ['0%', index < total - 1 ? '-3%' : '0%']
+    : ['6%', '0%', index < total - 1 ? '-3%' : '0%']
+
+  const combinedScale = useTransform(scrollYProgress, scaleBreakpoints, scaleValues)
+  const combinedY     = useTransform(scrollYProgress, yBreakpoints, yValues)
+
+  // Springs preserved exactly as before — same stiffness/damping, same
+  // "settle into place" feel. This cost is untouched on purpose: it's
+  // structurally required for the premium stacking motion and removing
+  // it would change the visual result, which is out of scope here.
   const scale = useSpring(combinedScale, { stiffness: 72, damping: 22 })
   const y     = useSpring(combinedY,     { stiffness: 72, damping: 22 })
 
-  const brightness = useTransform(scrollYProgress, [cardStart, cardEnd], [1, index < total - 1 ? 0.7 : 1])
-  const contentY   = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', '-6%'])
+  // ─────────────────────────────────────────────────────────────
+  // OPTIMIZED DIMMING — replaces filter: brightness()
+  //
+  // The old code animated `filter: brightness(v)` on the card's
+  // motion.div wrapper. Animating `filter` is paint-bound: every
+  // scroll-frame change forces the browser to re-rasterize the
+  // ENTIRE card subtree (pattern, grain, gradients, text, image)
+  // instead of just re-compositing an existing layer.
+  //
+  // dimOpacity drives a plain black overlay <motion.div> instead.
+  // Going from opacity 0 -> 0.3 over the same scroll range produces
+  // a near-identical perceived darkening for this kind of content
+  // (gradient + pattern + text on a dark/light card), but as a pure
+  // opacity animation, which the compositor handles without any
+  // paint at all. This is the single largest cost removed in this file.
+  //
+  // Visual note: this is a close approximation, not a mathematically
+  // exact match. True brightness() multiplies every channel, so it
+  // also dims bright highlights/accent glows; a black overlay blends
+  // toward black instead, which preserves hue slightly more at the
+  // same nominal "strength". At 0.3 max opacity this difference is
+  // not perceptible at normal scroll speed.
+  // ─────────────────────────────────────────────────────────────
+  const dimOpacity = useTransform(scrollYProgress, [cardStart, cardEnd], [0, index < total - 1 ? 0.3 : 0])
+
+  const contentY = useTransform(scrollYProgress, [cardStart, cardEnd], ['0%', '-6%'])
 
   // ── Theme-derived values ──
   const cardBg      = isDark ? project.darkBg      : project.lightBg
@@ -117,6 +175,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
   // MOBILE CARD: completely self-contained, flow layout, no sticky
   // Root problem was position:absolute inset:0 inside a height-less
   // container — everything collapsed to 0px on mobile.
+  // UNCHANGED — mobile never used scale/y/brightness/contentY at all.
   // ─────────────────────────────────────────────────────────────
   if (isMobile) {
     return (
@@ -326,7 +385,7 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
   }
 
   // ─────────────────────────────────────────────────────────────
-  // DESKTOP CARD: unchanged from original
+  // DESKTOP CARD: sticky scroll stack — optimized transform/paint path
   // ─────────────────────────────────────────────────────────────
   return (
     <div
@@ -347,10 +406,14 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
           width: '100%', height: '100%',
           scale,
           y,
-          filter: useTransform(brightness, v => `brightness(${v})`),
+          // filter REMOVED — was forcing a full repaint of this entire
+          // 100vh card every scroll frame. Darkening now happens via
+          // the dimOverlay div below instead (opacity-only, no paint).
           transformOrigin: 'top center',
-          willChange: 'transform, filter',
-          transition: 'filter 0.3s ease',
+          willChange: 'transform',
+          // 'filter' removed from willChange too — no longer animated
+          // here, so reserving a filter paint layer for it would be
+          // pure waste.
         }}
       >
         {/* Card shell */}
@@ -396,6 +459,19 @@ function ProjectCard({ project, index, total, scrollYProgress, isDark, isMobile 
               width: '400px', height: '400px', borderRadius: '50%',
               background: `radial-gradient(circle, ${project.accent}08 0%, transparent 65%)`,
               zIndex: 2, pointerEvents: 'none',
+            }}
+          />
+
+          {/* ── Dimming overlay — replaces filter: brightness() ──
+              Plain black, opacity-only, sits above all decorative
+              layers (zIndex 9) but below main content (zIndex 10).
+              Compositor-only animation: no paint triggered on scroll. */}
+          <motion.div
+            style={{
+              position: 'absolute', inset: 0, zIndex: 9,
+              background: '#000000',
+              opacity: dimOpacity,
+              pointerEvents: 'none',
             }}
           />
 

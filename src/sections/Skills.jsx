@@ -38,6 +38,7 @@ const skillGroups = [
     skills: [
       'Flask',
       'Node.js',
+      'Express.js',
       'REST APIs',
       'WebSockets',
       'Flask-SocketIO',

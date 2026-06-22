@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { motion, useAnimationFrame, useMotionValue, useTransform, useScroll } from 'framer-motion'
+import { motion, useAnimationFrame, useMotionValue, useTransform, useScroll, useInView } from 'framer-motion'
 import { HERO_IMAGE_LAYOUT_ID } from '../data/sharedKeys'
 import photo from '../assets/mashood.jpeg'
 import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
@@ -21,60 +21,98 @@ const socials = [
   { label: 'WhatsApp',  href: 'https://wa.me/917349596313', icon: <FaWhatsapp /> },
 ]
 
-// ── Slow floating animation via rAF ──
-function useFloat(range = 10, speed = 0.0008) {
+// ─────────────────────────────────────────────────────────────
+// useFloat — GATED VERSION
+//
+// The original version called useAnimationFrame unconditionally,
+// which means its callback ran on every animation frame for the
+// entire time Contact was mounted — i.e. the whole session, since
+// this is a single-page app and Contact mounts at initial load.
+// That meant a Math.sin() + MotionValue.set() call running 60x/sec
+// in the background while the user was scrolling through Hero,
+// About, Skills, or Projects, with the floating portrait nowhere
+// near the viewport.
+//
+// This version takes an `isActive` flag. When false, the callback
+// returns immediately after a single cheap boolean check — no sine
+// computation, no .set() call, so no MotionValue update and no
+// re-render/composite work is triggered. When the section scrolls
+// out of view, the value is also explicitly reset to 0 once, so the
+// portrait doesn't freeze at a random mid-float offset and instead
+// resumes its idle bob cleanly from rest the next time it scrolls
+// into view — same visual character as the original, just dormant
+// while invisible instead of running invisibly forever.
+// ─────────────────────────────────────────────────────────────
+function useFloat(range = 10, speed = 0.0008, isActive = true) {
   const y = useMotionValue(0)
-  const t = useRef(0)
+  const wasActive = useRef(isActive)
+
   useAnimationFrame((time) => {
-    t.current = time
+    if (!isActive) {
+      // Only perform the (cheap) reset once on the transition into
+      // "not active", not every frame while inactive.
+      if (wasActive.current) {
+        y.set(0)
+        wasActive.current = false
+      }
+      return
+    }
+    wasActive.current = true
     y.set(Math.sin(time * speed) * range)
   })
+
   return y
 }
 
 export default function Contact() {
   const { isMobile } = useResponsive()
-  const floatY = useFloat(7, 0.00055)
   const [focused, setFocused] = useState(null)
   const [sending, setSending] = useState(false)
   const [sent, setSent]       = useState(false)
   const formRef = useRef()
 
-  function handleSubmit(e) {
-  e.preventDefault()
-  setSending(true)
-
-  emailjs.sendForm(
-    'service_9o28mrl',
-    'template_91vk28b',
-    formRef.current,
-    'QQX0pum_hfiITk3OI'
-  )
-  .then(() => {
-    setSending(false)
-    setSent(true)
-    formRef.current.reset()
-  })
-  .catch((error) => {
-    console.error(error)
-    setSending(false)
-    alert('Failed to send message')
-  })
-}
-
   const sectionRef = useRef(null)
 
-    const { scrollYProgress } = useScroll({
-      target: sectionRef,
-      offset: ['start start', 'end end'],
+  // Drives the gate for useFloat below. `once: false` is intentional —
+  // unlike the whileInView entrance animations elsewhere in this file,
+  // this needs to keep tracking visibility for the component's entire
+  // lifetime so the float can re-engage every time the user scrolls
+  // back into Contact, not just the first time.
+  const isInView = useInView(sectionRef, { once: false, margin: '0px' })
+
+  const floatY = useFloat(7, 0.00055, isInView)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    setSending(true)
+
+    emailjs.sendForm(
+      'service_9o28mrl',
+      'template_91vk28b',
+      formRef.current,
+      'QQX0pum_hfiITk3OI'
+    )
+    .then(() => {
+      setSending(false)
+      setSent(true)
+      formRef.current.reset()
     })
+    .catch((error) => {
+      console.error(error)
+      setSending(false)
+      alert('Failed to send message')
+    })
+  }
 
-    const scale   = useTransform(scrollYProgress, [0, 1], [1, 0.96])
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  })
 
-
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96])
 
   return (
-    
+
     <>
       <motion.section
         ref={sectionRef}
