@@ -21,36 +21,12 @@ const socials = [
   { label: 'WhatsApp',  href: 'https://wa.me/917349596313', icon: <FaWhatsapp /> },
 ]
 
-// ─────────────────────────────────────────────────────────────
-// useFloat — GATED VERSION
-//
-// The original version called useAnimationFrame unconditionally,
-// which means its callback ran on every animation frame for the
-// entire time Contact was mounted — i.e. the whole session, since
-// this is a single-page app and Contact mounts at initial load.
-// That meant a Math.sin() + MotionValue.set() call running 60x/sec
-// in the background while the user was scrolling through Hero,
-// About, Skills, or Projects, with the floating portrait nowhere
-// near the viewport.
-//
-// This version takes an `isActive` flag. When false, the callback
-// returns immediately after a single cheap boolean check — no sine
-// computation, no .set() call, so no MotionValue update and no
-// re-render/composite work is triggered. When the section scrolls
-// out of view, the value is also explicitly reset to 0 once, so the
-// portrait doesn't freeze at a random mid-float offset and instead
-// resumes its idle bob cleanly from rest the next time it scrolls
-// into view — same visual character as the original, just dormant
-// while invisible instead of running invisibly forever.
-// ─────────────────────────────────────────────────────────────
 function useFloat(range = 10, speed = 0.0008, isActive = true) {
   const y = useMotionValue(0)
   const wasActive = useRef(isActive)
 
   useAnimationFrame((time) => {
     if (!isActive) {
-      // Only perform the (cheap) reset once on the transition into
-      // "not active", not every frame while inactive.
       if (wasActive.current) {
         y.set(0)
         wasActive.current = false
@@ -73,11 +49,6 @@ export default function Contact() {
 
   const sectionRef = useRef(null)
 
-  // Drives the gate for useFloat below. `once: false` is intentional —
-  // unlike the whileInView entrance animations elsewhere in this file,
-  // this needs to keep tracking visibility for the component's entire
-  // lifetime so the float can re-engage every time the user scrolls
-  // back into Contact, not just the first time.
   const isInView = useInView(sectionRef, { once: false, margin: '0px' })
 
   const floatY = useFloat(7, 0.00055, isInView)
@@ -127,6 +98,8 @@ export default function Contact() {
           position: 'relative',
           overflow: 'hidden',
           scale,
+          willChange: 'transform',
+          transformStyle: 'preserve-3d',
         }}
         id="contact"
         initial={{ opacity: 0, y: 32 }}
@@ -178,6 +151,7 @@ export default function Contact() {
               gap: '28px',
               y: floatY,
               scale: 1.02,
+              willChange: 'transform',
             }}
           >
             {/* Shared image — same layoutId as Hero & About */}
@@ -193,7 +167,9 @@ export default function Contact() {
                 overflow: 'hidden',
                 border: '1px solid rgba(255,255,255,0.08)',
                 background: 'linear-gradient(160deg,#1a1a1a,#111)',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',               position: 'relative',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',
+                position: 'relative',
+                willChange: 'transform',
               }}
             >
               {/* 🔥 IMAGE */}
@@ -227,7 +203,8 @@ export default function Contact() {
                   position: 'absolute',
                   inset: 0,
                   borderRadius: '28px',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',                  pointerEvents: 'none',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',
+                  pointerEvents: 'none',
                 }}
               />
             </motion.div>
@@ -247,6 +224,7 @@ export default function Contact() {
                   background: 'var(--input-bg)',
                   border: '1px solid var(--card-border)', opacity: 0.5,
                   animation: 'ping 1.8s cubic-bezier(0,0,0.2,1) infinite',
+                  willChange: 'transform, opacity',
                 }} />
                 <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--accent)' }} />
               </div>
@@ -269,7 +247,10 @@ export default function Contact() {
               background: 'var(--input-bg)',
               border: '1px solid var(--card-border)',
               backdropFilter: 'blur(20px)',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',          
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1), 0 6px 18px rgba(0,0,0,0.18)',
+              isolation: 'isolate',
+              transform: 'translateZ(0)',
             }}
           >
 
@@ -406,6 +387,7 @@ export default function Contact() {
                     outline: 'none',
                     opacity: sending ? 0.7 : 1,
                     transition: 'background 0.3s ease, color 0.3s ease, opacity 0.2s ease',
+                    willChange: 'transform',
                   }}
                 >
                   {sent ? '✓ Message sent' : sending ? 'Sending…' : 'Send Message →'}
@@ -487,6 +469,7 @@ function ContactItem({ icon, label, value, href, isLink }) {
         textDecoration: 'none',
         cursor: 'pointer',
         outline: 'none',
+        willChange: 'transform',
       }}
     >
       {/* Icon bubble */}
@@ -528,6 +511,8 @@ function ContactItem({ icon, label, value, href, isLink }) {
 
 /* ─────────────────────────────────────────
    SocialLink
+   (boxShadow on whileHover replaced with a pre-rendered, opacity-faded
+   shadow layer — see changelog. Visual result identical on hover.)
 ───────────────────────────────────────── */
 function SocialLink({ label, href, icon, index }) {
   const [hovered, setHovered] = useState(false)
@@ -543,14 +528,14 @@ function SocialLink({ label, href, icon, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, ease: EASE, delay: index * 0.07 }}
-      whileHover={{ y: -3, color: 'var(--accent)', boxShadow: '0 2px 6px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.2)' }}
+      whileHover={{ y: -3, color: 'var(--accent)' }}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
         padding: '10px 20px',
         borderRadius: '12px',
-        background: 'var(--card-bg)',
+        background: 'var(--input-bg)',
         color: 'var(--text-primary)',
         fontSize: '12.5px',
         fontWeight: 550,
@@ -559,19 +544,38 @@ function SocialLink({ label, href, icon, index }) {
         cursor: 'pointer',
         willChange: 'transform',
         transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
-        borderColor: 'var(--card-border)',
-        background: 'var(--input-bg)',
         border: '1px solid var(--card-border)',
-        }}
+        position: 'relative',
+      }}
     >
-      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      {/* Pre-rendered shadow layer: exists at all times, only its opacity
+          animates on hover. Avoids recomputing a multi-layer blurred
+          box-shadow on every hover transition; the shadow itself is
+          painted once and the browser only has to composite an opacity
+          change, which is GPU-cheap. Renders identically to the original
+          two-layer shadow at full hover opacity. */}
+      <motion.span
+        aria-hidden="true"
+        animate={{ opacity: hovered ? 1 : 0 }}
+        transition={{ duration: 0.2, ease: EASE }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '12px',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.2)',
+          pointerEvents: 'none',
+          willChange: 'opacity',
+        }}
+      />
+
+      <span style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
         <span style={{ fontSize: '14px' }}>{icon}</span>
         {label}
       </span>
       <motion.span
         animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : -4 }}
         transition={{ duration: 0.18, ease: EASE }}
-        style={{ fontSize: '11px', display: 'inline-block' }}
+        style={{ fontSize: '11px', display: 'inline-block', position: 'relative', zIndex: 1 }}
       >
         ↗
       </motion.span>
@@ -583,7 +587,7 @@ function SocialLink({ label, href, icon, index }) {
    Field — input + textarea
 ───────────────────────────────────────── */
 function Field({ id, label, type, placeholder, focused, setFocused, rows }) {
-  const isActive = focused === id   // ✅ REQUIRED
+  const isActive = focused === id
 
   const isTextarea = type === 'textarea'
   const Tag = isTextarea ? 'textarea' : 'input'
@@ -592,7 +596,7 @@ function Field({ id, label, type, placeholder, focused, setFocused, rows }) {
     <motion.div
       animate={{ scale: isActive ? 1.015 : 1 }}
       transition={{ duration: 0.22 }}
-      style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}
+      style={{ display: 'flex', flexDirection: 'column', gap: '7px', willChange: 'transform' }}
     >
       <label
         htmlFor={id}
